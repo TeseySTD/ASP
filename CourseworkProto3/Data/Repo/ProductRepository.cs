@@ -24,6 +24,21 @@ public class ProductRepository
                         .FirstOrDefaultAsync();
     }
 
+    public async Task<Product?> GetById(int id){
+        return await _context.Products
+                    .Include(p => p.Book)
+                    .Include(p => p.Disc)
+                        .ThenInclude(d => d.Movie)
+                            .ThenInclude(m => m.Actors)
+                    .Include(p => p.Disc)
+                        .ThenInclude(d => d.Music)
+                    .Include(p => p.Disc)
+                        .ThenInclude(d => d.Game)
+                    .Include(p => p.Owner)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.ProductId == id);
+    }
+
     public async Task<List<Product>> GetAll(){
         return await _context.Products
                     .Include(p => p.Book)

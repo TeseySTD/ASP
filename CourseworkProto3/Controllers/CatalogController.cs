@@ -20,5 +20,34 @@ namespace Library.Controllers
             return View(products);
         }
 
+        public async Task<ActionResult> Delete(int id){
+            await _productRepository.DeleteById(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+            var product = await _productRepository.GetById(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(Product product)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(product);
+            }
+
+            await _productRepository.Update(product);
+            return RedirectToAction("Index");
+        }
     }
 }

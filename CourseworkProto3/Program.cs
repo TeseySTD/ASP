@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
-// var connectionString = builder.Configuration.GetConnectionString("CourseworkProto1IdentityDbContextConnection") ?? throw new InvalidOperationException("Connection string 'CourseworkProto1IdentityDbContextConnection' not found.");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -46,7 +45,6 @@ builder.Services.AddAuthorization(options => {
 });
 DependencyService.InjectDependencies(builder.Services);
 
-// builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<LibraryContext>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -74,6 +72,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-// DBInitializer.Initialize();
-
+// DBInitializer.ReCreate();
+DBInitializer.SeedDataInCreatedDB();
 app.Run();

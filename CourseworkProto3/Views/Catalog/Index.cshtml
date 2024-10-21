@@ -80,8 +80,8 @@
                             <strong>Термін позичання:</strong> @product.BorrowingPeriod
                         } *@
                     </p>
-                    <a href="@Url.Action("Edit", "Product", new { id = product.ProductId })" class="card-link">Редагувати</a>
-                    <a href="@Url.Action("Delete", "Product", new { id = product.ProductId })" class="card-link">Видалити</a>
+                    <a href="@Url.Action("Update", "Catalog", new { id = product.ProductId })" class="card-link">Редагувати</a>
+                    <a href="@Url.Action("Delete", "Catalog", new { id = product.ProductId })" class="card-link text-danger">Видалити</a>
                 </div>
             </div>
         </div>
