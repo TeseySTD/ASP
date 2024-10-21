@@ -14,7 +14,7 @@ public class RegisterUserRequest
     [Required(ErrorMessage = "Введіть електронну пошту.")]
     [StringLength(50, ErrorMessage = "Пошта не може бути довшою за 50 символів.")]
     [EmailAddress(ErrorMessage = "Некоректно введена пошта.")]
-    [Remote(action: "ValidateEmail", controller: "Home")]
+    [Remote(action: "ValidateEmail", controller: "Validation", ErrorMessage = "Пошта вже використовується.")]
     public string Email { get; set; } = null!;
 
     [Required(ErrorMessage = "Пароль не може бути порожнім.")]

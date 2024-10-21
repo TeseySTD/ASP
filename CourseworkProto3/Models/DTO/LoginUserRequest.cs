@@ -13,6 +13,6 @@ public class LoginUserRequest
 
     [Required(ErrorMessage = "Пароль не може бути порожнім.")]
     [DataType(DataType.Password)]
-    [Remote(action: "ValidatePassword", controller: "Home", AdditionalFields = nameof(Email))]
+    [Remote(action: "ValidatePassword", controller: "Validation", AdditionalFields = nameof(Email), ErrorMessage = "Невірний пароль.")]
     public string Password { get; set; } = null!;
 }

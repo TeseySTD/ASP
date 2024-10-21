@@ -63,28 +63,6 @@ public class HomeController : Controller
         return RedirectToAction("Index");
     }
 
-    [AcceptVerbs("Get", "Post")]
-    public IActionResult ValidateEmail(string email){
-        if(_userRepository.IsEmailTaken(email)){
-            return Json("Пошта вже використовується.");
-        }
-        return Json(true);
-    }
-
-    [AcceptVerbs("Get", "Post")]
-    public IActionResult ValidatePassword(string email, string password)
-    {
-
-        if (_userRepository.IsPasswordCorrect(email, password))
-        {
-            return Json(true);
-        }
-        else
-        {
-            return Json($"Невірний пароль для {email}.");
-        }
-    }
-
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
