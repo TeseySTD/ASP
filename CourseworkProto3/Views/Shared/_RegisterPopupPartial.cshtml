@@ -14,7 +14,11 @@
                         <input class="form-control" asp-for="Login" />
                         <span asp-validation-for="Login" class="text-danger"></span>
                     </div>
-
+                    <div class="mb-3">
+                        <label class="form-label" asp-for="Email"></label>
+                        <input class="form-control" asp-for="Email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
                     <div class="mb-3">
                         <label class="form-label" asp-for="Password"></label>
                         <input class="form-control" asp-for="Password" type="password" />
@@ -23,9 +27,9 @@
                     <div class="mb-3">
                         <label class="form-label" asp-for="Gender"></label>
                         <select class="form-select" asp-for="Gender">
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
+                            <option value="">Обрати стать</option>
+                            <option value="Male">Чоловік</option>
+                            <option value="Female">Жінка</option>
                         </select>
                         <span asp-validation-for="Gender" class="text-danger"></span>
                     </div>

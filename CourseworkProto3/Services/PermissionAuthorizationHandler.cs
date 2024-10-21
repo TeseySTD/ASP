@@ -22,14 +22,15 @@ public class PermissionAuthorizationHandler : AuthorizationHandler<PermissionReq
         
 
         if (userId == null || !int.TryParse(userId, out var id))
-        {
             return;
-        }
 
         using var scope = _serviceScopeFactory.CreateScope();
 
         var userRepository = scope.ServiceProvider
             .GetRequiredService<UserRepository>();
+
+        if(!userRepository.IsUser(id))
+            return;
 
         var userPermissions = await userRepository.GetUserPermissionsAsync(id);
 

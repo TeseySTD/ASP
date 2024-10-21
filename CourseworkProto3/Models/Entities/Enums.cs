@@ -100,7 +100,8 @@ namespace Library.Models.Entities
         Sports,
         Fighting,
         Racing,
-        Platformer
+        Platformer,
+        Indie,
     }
 
 

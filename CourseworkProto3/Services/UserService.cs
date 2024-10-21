@@ -14,24 +14,25 @@ namespace Library.Services
             _userRepository = userRepository;
         }
 
-        public async Task<User> Register(string login, string password, Gender gender)
+        public async Task<User> Register(string login, string email, string password, Gender gender)
         {
             var user = new User
             {
                 Login = login,
+                Email = email,
                 Password = password,
-                AccessRights = /*(AccessRights)Enum.Parse(typeof(AccessRights), accessRights)*/ Roles.Default,
+                Role = /*(AccessRights)Enum.Parse(typeof(AccessRights), accessRights)*/ Roles.Default,
                 Gender = gender
             };
             await _userRepository.AddUser(user);
             return user;
         }
 
-        public async Task<string> Login(string login, string password)
+        public async Task<string> Login(string email, string password)
         {
-            var user = await _userRepository.GetUser(login, password);
+            var user = await _userRepository.GetUser(email, password);
             if (user == null)
-                throw new Exception("Wrong login or password");
+                throw new Exception("Wrong email or password");
             return JwtService.GenerateToken(user);
         }
         

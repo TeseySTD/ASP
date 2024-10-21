@@ -31,36 +31,9 @@ public class LibraryContext : DbContext
     }
 
 
-    // protected override void OnModelCreating(ModelBuilder modelBuilder)
-    // {
-    //     // Каскадне видалення для MusicDisc -> Disc
-    //     modelBuilder.Entity<MusicDisc>()
-    //         .HasOne(md => md.Disc)
-    //         .WithOne(d => d.MusicDisc)
-    //         .HasForeignKey<MusicDisc>(md => md.DiscId)
-    //         .OnDelete(DeleteBehavior.Cascade);
-
-    //     // Каскадне видалення для Movie -> Disc
-    //     modelBuilder.Entity<Movie>()
-    //         .HasOne(m => m.Disc)
-    //         .WithOne(d => d.Movie)
-    //         .HasForeignKey<Movie>(m => m.DiscId)
-    //         .OnDelete(DeleteBehavior.Cascade);
-
-    //     // Каскадне видалення для Game -> Disc
-    //     modelBuilder.Entity<Game>()
-    //         .HasOne(g => g.Disc)
-    //         .WithOne(d => d.Game)
-    //         .HasForeignKey<Game>(g => g.DiscId)
-    //         .OnDelete(DeleteBehavior.Cascade);
-
-    //     // Каскадне видалення для Disc -> Product
-    //     modelBuilder.Entity<Disc>()
-    //         .HasOne(d => d.Product)
-    //         .WithOne(p => p.Disc)
-    //         .HasForeignKey<Disc>(d => d.ProductId)
-    //         .OnDelete(DeleteBehavior.Cascade);
-    // }
-
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        DBInitializer.Seed(modelBuilder);
+    }
 
 }

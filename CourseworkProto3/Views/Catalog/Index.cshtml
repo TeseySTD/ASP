@@ -40,26 +40,31 @@
                         @if (product.Book != null)
                         {
                             <strong>Автор:</strong> @product.Book.Author <br />
-                            <strong>Жанр:</strong> @product.Book.Genre <br />
+                            <strong>Жанр:</strong> @Enum.GetName(typeof(BookGenre), product.Book.Genre)<br /> 
                             <strong>Рік видання:</strong> @product.Book.PublicationYear
                         }
                         else if (product.Disc != null)
                         {
+                            <strong>Формат:</strong> @Enum.GetName(typeof(DiscFormat), product.Disc.Format) <br />
+                            <strong>Тип:</strong> @Enum.GetName(typeof(DiscType), product.Disc.DiscType) <br />
+                            <strong>Рік:</strong> @product.Disc.Year <br /> 
                             if (product.Disc.Movie != null)
                             {
                                 <strong>Режисер:</strong> @product.Disc.Movie.Director <br />
-                                <strong>Тривалість:</strong> @product.Disc.Movie.Duration  <br />
+                                <strong>Тривалість:</strong> @product.Disc.Movie.Duration @:хвилин.  <br />
+                                <strong>Жанр:</strong> @Enum.GetName(typeof(MovieGenre), product.Disc.Movie.Genre)<br />
                                 <strong>Актори:</strong> 
-                                @string.Join(", ", product.Disc.Movie.Actors)
+                                @string.Join(", ", product.Disc.Movie.Actors.Select(a => a.Name))
                             }
                             else if (product.Disc.Music != null)
                             {
                                 <strong>Артист:</strong> @product.Disc.Music.Artist <br />
-                                <strong>Жанр:</strong> @product.Disc.Music.MusicGenre <br />
+                                <strong>Жанр:</strong> @Enum.GetName(typeof(MusicGenre), product.Disc.Music.Genre)<br />
                                 <strong>Треки:</strong> @product.Disc.Music.TrackCount
                             }
                             else if (product.Disc.Game != null)
                             {
+                                <strong>Жанр:</strong> @Enum.GetName(typeof(GameGenre), product.Disc.Game.Genre) <br />
                                 <strong>Платформа:</strong> @Enum.GetName(typeof(GamePlatform), product.Disc.Game.Platform) <br />
                                 <strong>Розробник:</strong> @product.Disc.Game.Developer
                             }

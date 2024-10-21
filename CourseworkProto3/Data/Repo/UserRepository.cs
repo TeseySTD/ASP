@@ -16,11 +16,11 @@ namespace Library.Data.Repo
             _context = context;
         }
 
-        public async Task<User> GetUser(string login, string password)
+        public async Task<User> GetUser(string email, string password)
         {
             var user = await _context.Users
                             .AsNoTracking()
-                            .FirstOrDefaultAsync(x => x.Login == login && x.Password == password);
+                            .FirstOrDefaultAsync(x => x.Email == email && x.Password == password);
             return user;
         }
 
@@ -45,7 +45,7 @@ namespace Library.Data.Repo
         public async Task<List<Permission>> GetUserPermissionsAsync(int userId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
-            return RolePermissions.Permissions[user.AccessRights];
+            return RolePermissions.Permissions[user.Role];
         }
 
         public User GetUserByToken(string token){
@@ -60,10 +60,18 @@ namespace Library.Data.Repo
             return _context.Users.Any(u => u.Login == login);
         }
 
-        public bool IsPasswordCorrect(string login, string password)
+        public bool IsEmailTaken(string email){
+            return _context.Users.Any(u => u.Email == email);
+        }
+
+        public bool IsPasswordCorrect(string email, string password)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Login == login && u.Password == password);
+            var user = _context.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
             return user != null;
+        }
+
+        public bool IsUser(int id){
+            return _context.Users.Any(u => u.UserId == id);
         }
     }
 }

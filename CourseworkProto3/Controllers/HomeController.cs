@@ -42,16 +42,16 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> Register(RegisterUserRequest request)
     {
-        await _userService.Register(request.Login, request.Password, request.Gender);
+        await _userService.Register(request.Login, request.Email, request.Password, request.Gender);
         return RedirectToAction("Index");
     }
     
     [HttpPost]
     public async Task<IActionResult> Login(LoginUserRequest request){
 
-        var token = await _userService.Login(request.Login, request.Password);
+        var token = await _userService.Login(request.Email, request.Password);
         if(token == null)
-            throw new Exception("Wrong login or password");
+            throw new Exception("Wrong email or password");
 
         Response.Cookies.Append("access-cookie", token);  
         return RedirectToAction("Index");
@@ -64,24 +64,24 @@ public class HomeController : Controller
     }
 
     [AcceptVerbs("Get", "Post")]
-    public IActionResult ValidateLogin(string login){
-        if(_userRepository.IsLoginTaken(login)){
-            return Json("Login is already taken.");
+    public IActionResult ValidateEmail(string email){
+        if(_userRepository.IsEmailTaken(email)){
+            return Json("Пошта вже використовується.");
         }
         return Json(true);
     }
 
     [AcceptVerbs("Get", "Post")]
-    public IActionResult ValidatePassword(string login, string password)
+    public IActionResult ValidatePassword(string email, string password)
     {
 
-        if (_userRepository.IsPasswordCorrect(login, password))
+        if (_userRepository.IsPasswordCorrect(email, password))
         {
             return Json(true);
         }
         else
         {
-            return Json($"Incorrect password for user {login}.");
+            return Json($"Невірний пароль для {email}.");
         }
     }
 
