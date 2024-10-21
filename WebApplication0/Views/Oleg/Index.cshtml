@@ -1,0 +1,14 @@
+
+@{
+    ViewData["Title"] = "Oleg";
+}
+
+<h2>Oleg</h2>
+
+<p>
+    <a asp-action="Create">Create New student</a>
+</p>
+
+@await Component.InvokeAsync("StudentsList")
+
+@await Component.InvokeAsync("EnrollmentsList")

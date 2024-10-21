@@ -1,0 +1,50 @@
+@model IEnumerable<WebApplication0.Models.Student>;
+@* @model StringWrapper; *@
+@if(Model != null){
+
+<div class="table-responsive" style="max-height: 450px;">
+    <img src="\images\oleg_eblo_wow.png" asp-append-version="true"/>
+    <table class="table table-hover " >
+        <thead>
+            <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LastName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstMidName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EnrollmentDate)
+                    </th>
+                    <th>
+                        Functions
+                    </th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstMidName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EnrollmentDate)
+                </td>
+                <td>
+                    @{
+                        ViewData["studentID"]=@item.ID;
+                    }
+                    <a asp-action="Edit" asp-route-studentID="@item.ID">Edit</a> |
+                    <a method="post" asp-action="Details" asp-route-studentID="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-studentID="@item.ID">Delete</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+</div>
+
+}

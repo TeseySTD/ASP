@@ -1,0 +1,4 @@
+GET http://localhost:5197/Home/Error
+
+###
+GET http://localhost:5197/localhost:5197/Oleg/Details?studentID=42

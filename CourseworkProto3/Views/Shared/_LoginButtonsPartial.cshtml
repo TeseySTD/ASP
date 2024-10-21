@@ -1,0 +1,34 @@
+@using Library.Data.Repo
+@using Library.Models.DTO
+@using Library.Services
+
+@inject UserRepository userRepository;
+
+<ul class="navbar-nav">
+    @{
+        var user = userRepository.GetUserByToken(Context.Request.Cookies["access-cookie"]);
+        if (user != null)
+        {
+            <li class="nav-item">
+                <button class="btn btn-outline-dark me-2" data-bs-toggle="modal" data-bs-target="#registerModal" id="register">Додати користувача</button>
+            </li>
+            <li class="nav-item">
+                <a id="manage" class="nav-link text-dark"  title="Manage">Користувач: @user.Login</a>
+            </li>
+            <li class="nav-item">
+                <form id="logoutForm" class="form-inline" asp-controller="Home" asp-action="Logout" >
+                    <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Вийти</button>
+                </form>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal" id="login">Вхід</button>
+            </li>
+        }
+    }
+</ul>
+
+@await Html.PartialAsync("_RegisterPopupPartial", new RegisterUserRequest())
+@await Html.PartialAsync("_LoginPopupPartial", new LoginUserRequest())

@@ -1,0 +1,84 @@
+﻿@using Library.Models.Entities
+@model IEnumerable<Library.Models.Entities.Product>
+@{
+    ViewData["Title"] = "Каталог";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Каталог книг та дисків</h1>
+    <p>Перелік всіх книг та дисків інформаційної системи <a asp-controller="Home" asp-action="Index">Домашньої бібліотеки</a>.</p>
+</div>
+
+<div class="row">
+    @foreach (var product in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-4" style="width: 25rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@product.Title</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        @if (product.Book != null)
+                        {
+                            @:Книга
+                        }
+                        else if (product.Disc != null)
+                        {
+                            switch(product.Disc.DiscType) 
+                            {
+                                case DiscType.Movie : @:Фільм
+                                break;
+                                case DiscType.Music : @:Музика
+                                break;
+                                case DiscType.Game : @:Гра
+                                break;
+                                default : @:Диск
+                                break;
+                            }
+                        }
+                    </h6>
+                    <p class="card-text">
+                        @if (product.Book != null)
+                        {
+                            <strong>Автор:</strong> @product.Book.Author <br />
+                            <strong>Жанр:</strong> @product.Book.Genre <br />
+                            <strong>Рік видання:</strong> @product.Book.PublicationYear
+                        }
+                        else if (product.Disc != null)
+                        {
+                            if (product.Disc.Movie != null)
+                            {
+                                <strong>Режисер:</strong> @product.Disc.Movie.Director <br />
+                                <strong>Тривалість:</strong> @product.Disc.Movie.Duration  <br />
+                                <strong>Актори:</strong> 
+                                @string.Join(", ", product.Disc.Movie.Actors)
+                            }
+                            else if (product.Disc.Music != null)
+                            {
+                                <strong>Артист:</strong> @product.Disc.Music.Artist <br />
+                                <strong>Жанр:</strong> @product.Disc.Music.MusicGenre <br />
+                                <strong>Треки:</strong> @product.Disc.Music.TrackCount
+                            }
+                            else if (product.Disc.Game != null)
+                            {
+                                <strong>Платформа:</strong> @Enum.GetName(typeof(GamePlatform), product.Disc.Game.Platform) <br />
+                                <strong>Розробник:</strong> @product.Disc.Game.Developer
+                            }
+                        }
+                        <br />
+                        <strong>Власник:</strong> @product.Owner.Login <br />
+                        @* @if (product. != null)
+                        {
+                            <strong>Термін оренди:</strong> @product.RentalPeriod
+                        }
+                        else if (product.BorrowingPeriod != null)
+                        {
+                            <strong>Термін позичання:</strong> @product.BorrowingPeriod
+                        } *@
+                    </p>
+                    <a href="@Url.Action("Edit", "Product", new { id = product.ProductId })" class="card-link">Редагувати</a>
+                    <a href="@Url.Action("Delete", "Product", new { id = product.ProductId })" class="card-link">Видалити</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
