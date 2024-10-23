@@ -10,9 +10,9 @@ public class Game
 
     [ForeignKey("Disc")]
     public int DiscId { get; set; }
-    public Disc Disc { get; set; }
+    public Disc Disc { get; set; } = null!;
 
-    public GamePlatform Platform { get; set; }
-    public GameGenre Genre { get; set; }
-    public string Developer { get; set; }
+    public List<GameGenre> Genre { get; set; } = null!;
+    public string Developer { get; set; } = null!;
+    public string Publisher { get; set; } = null!;
 }

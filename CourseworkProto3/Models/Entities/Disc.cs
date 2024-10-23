@@ -16,7 +16,7 @@ namespace Library.Models.Entities
         public Product Product { get; set; }
 
         public DiscFormat Format { get; set; }
-        public int? Year { get; set; }
+        public int Year { get; set; }
         public DiscType DiscType { get; set; }
 
         public Movie Movie { get; set; }

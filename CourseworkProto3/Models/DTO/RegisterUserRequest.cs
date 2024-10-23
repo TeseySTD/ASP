@@ -8,7 +8,7 @@ namespace Library.Models.DTO;
 public class RegisterUserRequest
 {
     [Required(ErrorMessage = "Логін не може бути порожнім.")]
-    [StringLength(50, ErrorMessage = "Login cannot be longer than 50 characters.")]
+    [StringLength(50, ErrorMessage = "Логін не може бути довше ніж 50 символів.")]
     public string Login { get; set; } = null!;
 
     [Required(ErrorMessage = "Введіть електронну пошту.")]

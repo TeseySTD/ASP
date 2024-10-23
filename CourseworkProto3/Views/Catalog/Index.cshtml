@@ -7,6 +7,13 @@
 <div class="text-center">
     <h1 class="display-4">Каталог книг та дисків</h1>
     <p>Перелік всіх книг та дисків інформаційної системи <a asp-controller="Home" asp-action="Index">Домашньої бібліотеки</a>.</p>
+    <div class="text-center mb-5 mt-5">
+        <button class="btn btn-primary" asp-controller="Catalog" asp-action="AddBook">Додати книгу</button>
+        <button class="btn btn-primary" asp-controller="Catalog" asp-action="AddMovie">Додати фільм</button>
+        <button class="btn btn-primary" asp-controller="Catalog" asp-action="AddMusic">Додати музику</button>
+        <button class="btn btn-primary" asp-controller="Catalog" asp-action="AddGame">Додати гру</button>
+    </div>
+
 </div>
 
 <div class="row">
@@ -40,7 +47,7 @@
                         @if (product.Book != null)
                         {
                             <strong>Автор:</strong> @product.Book.Author <br />
-                            <strong>Жанр:</strong> @Enum.GetName(typeof(BookGenre), product.Book.Genre)<br /> 
+                            <strong>Жанри:</strong> @string.Join(", ", product.Book.Genre.Select(g => g.Name))<br /> 
                             <strong>Рік видання:</strong> @product.Book.PublicationYear
                         }
                         else if (product.Disc != null)
@@ -52,20 +59,20 @@
                             {
                                 <strong>Режисер:</strong> @product.Disc.Movie.Director <br />
                                 <strong>Тривалість:</strong> @product.Disc.Movie.Duration @:хвилин.  <br />
-                                <strong>Жанр:</strong> @Enum.GetName(typeof(MovieGenre), product.Disc.Movie.Genre)<br />
+                                <strong>Жанри:</strong> @string.Join(", ", product.Disc.Movie.Genre.Select(g => g.Name))<br />
                                 <strong>Актори:</strong> 
                                 @string.Join(", ", product.Disc.Movie.Actors.Select(a => a.Name))
                             }
                             else if (product.Disc.Music != null)
                             {
                                 <strong>Артист:</strong> @product.Disc.Music.Artist <br />
-                                <strong>Жанр:</strong> @Enum.GetName(typeof(MusicGenre), product.Disc.Music.Genre)<br />
+                                <strong>Жанри:</strong> @string.Join(", ", product.Disc.Music.Genre.Select(g => g.Name))<br />
                                 <strong>Треки:</strong> @product.Disc.Music.TrackCount
                             }
                             else if (product.Disc.Game != null)
                             {
-                                <strong>Жанр:</strong> @Enum.GetName(typeof(GameGenre), product.Disc.Game.Genre) <br />
-                                <strong>Платформа:</strong> @Enum.GetName(typeof(GamePlatform), product.Disc.Game.Platform) <br />
+                                <strong>Жанри:</strong> @string.Join(", ", product.Disc.Game.Genre.Select(g => g.Name)) <br />
+                                <strong>Видавець:</strong> @product.Disc.Game.Publisher <br />
                                 <strong>Розробник:</strong> @product.Disc.Game.Developer
                             }
                         }

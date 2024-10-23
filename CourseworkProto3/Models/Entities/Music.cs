@@ -13,6 +13,6 @@ public class Music
     public Disc Disc { get; set; }
 
     public string Artist { get; set; }
-    public MusicGenre Genre { get; set; }
-    public int? TrackCount { get; set; }
+    public List<MusicGenre> Genre { get; set; }
+    public int TrackCount { get; set; }
 }

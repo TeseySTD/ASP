@@ -71,86 +71,6 @@ public static class DBInitializer
         }
     }
 
-    public static void Seed(ModelBuilder modelBuilder){
-        modelBuilder.Entity<User>().HasData(
-            new User { UserId = 1, Login = "root", Email = "root@gmail.com", Password = "pass", Gender = Gender.Male, Role = Roles.Owner },
-            new User { UserId = 2, Login = "Jane Smith", Email = "jane@gmail.com", Password = "pass", Gender = Gender.Female, Role = Roles.Administrator },
-            new User { UserId = 3, Login = "John Doe", Email = "john@gmail.com", Password = "pass", Gender = Gender.Male, Role = Roles.Operator },
-            new User { UserId = 4, Login = "Jane Doe", Email = "jane@gmail.com", Password = "pass", Gender = Gender.Female, Role = Roles.Default }
-        );
-
-        // Add Products
-        modelBuilder.Entity<Product>().HasData(
-            new Product { ProductId = 1, Title = "The Great Gatsby", ProductType = ProductType.Book, OwnerId = 1 },
-            new Product { ProductId = 2, Title = "Inception", ProductType = ProductType.Disc, OwnerId = 1 },
-            new Product { ProductId = 3, Title = "The Dark Side of the Moon", ProductType = ProductType.Disc, OwnerId = 2 },
-            new Product { ProductId = 4, Title = "Call of Duty", ProductType = ProductType.Disc, OwnerId = 2 }
-        );
-
-        // Add Books
-        modelBuilder.Entity<Book>().HasData(
-            new Book { BookId = 1, ProductId = 1, Author = "F. Scott Fitzgerald", Genre = BookGenre.Fiction, PublicationYear = 1925 }
-        );
-
-        // Add Discs
-        modelBuilder.Entity<Disc>().HasData(
-            new Disc { DiscId = 1, ProductId = 2, Format = DiscFormat.BluRay, Year = 2010, DiscType = DiscType.Movie },
-            new Disc { DiscId = 2, ProductId = 3, Format = DiscFormat.CD, Year = 1973, DiscType = DiscType.Music },
-            new Disc { DiscId = 3, ProductId = 4, Format = DiscFormat.BluRay, Year = 2020, DiscType = DiscType.Game }
-        );
-
-        modelBuilder.Entity<Movie>(b =>
-        {
-            b.HasData(
-                new Movie { MovieId = 1, DiscId = 1, Director = "Christopher Nolan", Duration = 148, Genre = MovieGenre.Drama });
-
-            b.HasMany(m => m.Actors)
-                .WithMany(a => a.Movies)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ActorMovie",
-                    r => r.HasOne<Actor>().WithMany().HasForeignKey("ActorId").HasPrincipalKey(a => a.ActorId),
-                    l => l.HasOne<Movie>().WithMany().HasForeignKey("MovieId").HasPrincipalKey(m => m.MovieId),
-                    je =>
-                    {
-                        je.HasKey("MovieId", "ActorId");
-                        je.HasData(
-                            new { MovieId = 1, ActorId = 1 }, // Tom Hanks
-                            new { MovieId = 1, ActorId = 2 }  // Leonardo DiCaprio
-                        );
-                    });
-        });
-
-        modelBuilder.Entity<Actor>(b =>
-        {
-            b.HasData(
-                new Actor { ActorId = 1, Name = "Tom Hanks" },
-                new Actor { ActorId = 2, Name = "Leonardo DiCaprio" });
-        });
-
-
-        // Add Games
-        modelBuilder.Entity<Game>().HasData(
-            new Game { GameId = 1, DiscId = 3, Platform = GamePlatform.PC, Developer = "Activision", Genre = GameGenre.Indie }
-        );
-
-        // Add Musics
-        modelBuilder.Entity<Music>().HasData(
-            new Music { MusicId = 1, DiscId = 2, Artist = "Pink Floyd", Genre = MusicGenre.Rock, TrackCount = 10 }
-        );
-
-        // Add Borrowings
-        modelBuilder.Entity<Borrow>().HasData(
-            new Borrow { BorrowId = 1, LenderId = 1, BorrowerId = 2, ProductId = 1, BorrowStartDate = DateTime.Now.AddDays(-5), BorrowEndDate = DateTime.Now.AddDays(5) },
-            new Borrow { BorrowId = 2, LenderId = 2, BorrowerId = 1, ProductId = 2, BorrowStartDate = DateTime.Now.AddDays(-3), BorrowEndDate = DateTime.Now.AddDays(7) }
-        );
-
-        // Add Rentals
-        modelBuilder.Entity<Rental>().HasData(
-            new Rental { RentalId = 1, UserId = 1, ProductId = 3, RentalStartDate = DateTime.Now.AddDays(-2), RentalEndDate = DateTime.Now, PaymentAmount = 10.0M },
-            new Rental { RentalId = 2, UserId = 2, ProductId = 4, RentalStartDate = DateTime.Now.AddDays(-1), RentalEndDate = DateTime.Now, PaymentAmount = 15.0M }
-        );
-    }
-
     public static void SeedDataInCreatedDB()
     {
         using (LibraryContext context = new LibraryContext()){ 
@@ -169,7 +89,7 @@ public static class DBInitializer
                 // Add Products
                 var products = new List<Product>
                 {
-                    new Product { ProductId = 1, Title = "The Great Gatsby", ProductType = ProductType.Book},
+                    new Product { ProductId = 1, Title = "Великий Гетсбі", ProductType = ProductType.Book},
                     new Product { ProductId = 2, Title = "Inception", ProductType = ProductType.Disc},
                     new Product { ProductId = 3, Title = "The Dark Side of the Moon", ProductType = ProductType.Disc},
                     new Product { ProductId = 4, Title = "Call of Duty", ProductType = ProductType.Disc}
@@ -180,14 +100,6 @@ public static class DBInitializer
                 products[3].Owner = users[1];
 
                 context.Products.AddRange(products);
-                context.SaveChanges();
-
-                // Add Books
-                var books = new List<Book>
-                {
-                    new Book { BookId = 1, ProductId = 1, Author = "F. Scott Fitzgerald", Genre = BookGenre.Fiction, PublicationYear = 1925 }
-                };
-                context.Books.AddRange(books);
                 context.SaveChanges();
 
                 // Add Discs
@@ -209,10 +121,47 @@ public static class DBInitializer
                 context.Actors.AddRange(actors);
                 context.SaveChanges();
 
+                //Add book genres
+                var bookGenres = new List<BookGenre>{
+                    new BookGenre { GenreId = 1, Name = "Фантастика" },
+                    new BookGenre { GenreId = 2, Name = "Фентезі" },
+                    new BookGenre { GenreId = 3, Name = "Хоррор" }
+                };
+                context.BookGenres.AddRange(bookGenres);
+                context.SaveChanges();
+
+                // Add game genres
+                var gameGenres = new List<GameGenre>{
+                    new GameGenre { GenreId = 1, Name = "Екшн" },
+                };
+                context.GameGenres.AddRange(gameGenres);
+                context.SaveChanges();
+
+                //Add Music genres
+                var musicGenres = new List<MusicGenre>{
+                    new MusicGenre { GenreId = 1, Name = "Рок" },
+                };
+                context.MusicGenres.AddRange(musicGenres);
+                context.SaveChanges();
+
+                //Add movie genres
+                var movieGenres = new List<MovieGenre>{
+                    new MovieGenre { GenreId = 1, Name = "Драма" },
+                    new MovieGenre { GenreId = 2, Name = "Екшн" }
+                };
+
+                // Add Books
+                var books = new List<Book>
+                {
+                    new Book { BookId = 1, ProductId = 1, Author = "F. Scott Fitzgerald", Genre = bookGenres, PublicationYear = 1925 }
+                };
+                context.Books.AddRange(books);
+                context.SaveChanges();
+
                 // Add Movies
                 var movies = new List<Movie>
                 {
-                    new Movie { MovieId = 1, Disc = discs[0], Duration = 148, Director = "Christopher Nolan", Genre = MovieGenre.Drama, Actors = actors },
+                    new Movie { MovieId = 1, Disc = discs[0], Duration = 148, Director = "Christopher Nolan", Genre = movieGenres, Actors = actors },
                 };
                 context.Movies.AddRange(movies);
                 context.SaveChanges();
@@ -220,7 +169,7 @@ public static class DBInitializer
                 // Add Games
                 var games = new List<Game>
                 {
-                    new Game { GameId = 1, DiscId = 3, Platform = GamePlatform.PC, Developer = "Activision", Genre = GameGenre.Indie }
+                    new Game { GameId = 1, DiscId = 3, Developer = "Activision", Publisher = "Activision", Genre = gameGenres }
                 };
                 context.Games.AddRange(games);
                 context.SaveChanges();
@@ -228,7 +177,7 @@ public static class DBInitializer
                 // Add Musics
                 var musicDiscs = new List<Music>
                 {
-                    new Music { MusicId = 1, DiscId = 2, Artist = "Pink Floyd", Genre = MusicGenre.Rock, TrackCount = 10 }
+                    new Music { MusicId = 1, DiscId = 2, Artist = "Pink Floyd", Genre = musicGenres, TrackCount = 10 }
                 };
                 context.Music.AddRange(musicDiscs);
                 context.SaveChanges();

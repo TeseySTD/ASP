@@ -1,8 +1,9 @@
 @using Library.Models.Entities
-@model Library.Models.Entities.Product
+@using Library.Models.DTO
+@model Library.Models.DTO.ProductDto
 
 @{
-    ViewData["Title"] = "Оновити продукт";
+    ViewData["Title"] = "Оновити книгу або диск";
 }
 
 <h2>Оновити книгу або диск</h2>
@@ -25,13 +26,9 @@
         </div>
         
         <div class="form-group">
-            <label asp-for="Book.Genre" class="control-label">Жанр</label>
-            <select asp-for="Book.Genre" class="form-control">
-                @foreach (var genre in Enum.GetValues(typeof(BookGenre)))
-                {
-                    <option value="@genre">@genre</option>
-                }
-            </select>
+            <label asp-for="Book.Genre" class="control-label">Жанри</label>
+            <input asp-for="Book.Genre" class="form-control" placeholder="Жанр1, Жанр2" />
+            <span asp-validation-for="Book.Genre" class="text-danger"></span>
         </div>
 
         <div class="form-group">
@@ -53,13 +50,9 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="Disc.DiscType" class="control-label">Тип диску</label>
-            <select asp-for="Disc.DiscType" class="form-control">
-                @foreach (var discType in Enum.GetValues(typeof(DiscType)))
-                {
-                    <option value="@discType">@discType</option>
-                }
-            </select>
+            <label asp-for="Disc.Year" class="control-label">Рік</label>
+            <input asp-for="Disc.Year" class="form-control" />
+            <span asp-validation-for="Disc.Year" class="text-danger"></span>
         </div>
 
         @if (Model.Disc.Movie != null)
@@ -77,31 +70,29 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="Disc.Movie.Genre" class="control-label">Жанр фільму</label>
-                <select asp-for="Disc.Movie.Genre" class="form-control">
-                    @foreach (var genre in Enum.GetValues(typeof(MovieGenre)))
-                    {
-                        <option value="@genre">@genre</option>
-                    }
-                </select>
+                <label asp-for="Disc.Movie.Genre" class="control-label">Жанри</label>
+                <input asp-for="Disc.Movie.Genre" class="form-control" placeholder="Жанр1, Жанр2" />
+                <span asp-validation-for="Disc.Movie.Genre" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Disc.Movie.Actors" class="control-label">Список акторів</label>
+                <input asp-for="Disc.Movie.Actors" class="form-control" placeholder="Актор1, Актор2" />
+                <span asp-validation-for="Disc.Movie.Actors" class="text-danger"></span>
             </div>
         }
         else if (Model.Disc.Music != null)
         {
             <div class="form-group">
-                <label asp-for="Disc.Music.Artist" class="control-label">Артист</label>
+                <label asp-for="Disc.Music.Artist" class="control-label">Виконавець</label>
                 <input asp-for="Disc.Music.Artist" class="form-control" />
                 <span asp-validation-for="Disc.Music.Artist" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Disc.Music.Genre" class="control-label">Жанр музики</label>
-                <select asp-for="Disc.Music.Genre" class="form-control">
-                    @foreach (var genre in Enum.GetValues(typeof(MusicGenre)))
-                    {
-                        <option value="@genre">@genre</option>
-                    }
-                </select>
+                <label asp-for="Disc.Music.Genre" class="control-label">Жанри</label>
+                <input asp-for="Disc.Music.Genre" class="form-control" placeholder="Жанр1, Жанр2" />
+                <span asp-validation-for="Disc.Music.Genre" class="text-danger"></span>
             </div>
         }
         else if (Model.Disc.Game != null)
@@ -113,13 +104,15 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="Disc.Game.Genre" class="control-label">Жанр гри</label>
-                <select asp-for="Disc.Game.Genre" class="form-control">
-                    @foreach (var genre in Enum.GetValues(typeof(GameGenre)))
-                    {
-                        <option value="@genre">@genre</option>
-                    }
-                </select>
+                <label asp-for="Disc.Game.Publisher" class="control-label">Видавець</label>
+                <input asp-for="Disc.Game.Publisher" class="form-control" />
+                <span asp-validation-for="Disc.Game.Publisher" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Disc.Game.Genre" class="control-label">Жанри</label>
+                <input asp-for="Disc.Game.Genre" class="form-control" placeholder="Жанр1, Жанр2" />
+                <span asp-validation-for="Disc.Game.Genre" class="text-danger"></span>
             </div>
         }
     }

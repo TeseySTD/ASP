@@ -17,7 +17,7 @@ namespace Library.Models.Entities
 
         public int Duration { get; set; }
         public string Director { get; set; }
-        public MovieGenre Genre { get; set; }
+        public List<MovieGenre> Genre { get; set; }
         public List<Actor> Actors { get; set; } = new();
     }
 }

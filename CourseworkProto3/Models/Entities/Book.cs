@@ -13,6 +13,6 @@ public class Book
     public Product Product { get; set; }
 
     public string Author { get; set; }
-    public BookGenre Genre { get; set; }
+    public List<BookGenre> Genre { get; set; }
     public int PublicationYear { get; set; }
 }

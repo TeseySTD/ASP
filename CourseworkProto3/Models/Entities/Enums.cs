@@ -42,69 +42,6 @@ namespace Library.Models.Entities
         Game = 3
     }
 
-    public enum MusicGenre
-    {
-        Rock = 1,
-        Pop,
-        Jazz,
-        Classical,
-        HipHop,
-        Electronic,
-        Blues,
-        Reggae,
-        Metal
-    }
-
-    public enum MovieGenre
-    {
-        Action = 1,
-        Comedy,
-        Drama,
-        Horror,
-        Thriller,
-        Fantasy,
-        SciFi,
-        Romance,
-        Documentary,
-        Animation,
-        Adventure,
-        Mystery,
-        Crime,
-        Musical,
-        Historical,
-        Western
-    }
-
-    public enum BookGenre
-    {
-        Horror = 1,
-        Adventure,
-        Mystery,
-        Fantasy,
-        Fiction,
-        Romance,
-        Thriller,
-        Biography,
-        Historical,
-        ScienceFiction
-    }
-
-    public enum GameGenre
-    {
-        Action = 1,
-        Strategy,
-        RPG,
-        Simulation,
-        Horror,
-        Puzzle,
-        Sports,
-        Fighting,
-        Racing,
-        Platformer,
-        Indie,
-    }
-
-
     public enum GamePlatform
     {
         PC = 1,

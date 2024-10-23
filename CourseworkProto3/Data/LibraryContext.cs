@@ -1,3 +1,4 @@
+using System.Security.Permissions;
 using Library.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,10 @@ public class LibraryContext : DbContext
     public DbSet<Music> Music { get; set; }
     public DbSet<Game> Games { get; set; }
     public DbSet<Book> Books { get; set; }
+    public DbSet<BookGenre> BookGenres { get; set; }
+    public DbSet<GameGenre> GameGenres { get; set; }
+    public DbSet<MusicGenre> MusicGenres { get; set; }
+    public DbSet<MovieGenre> MovieGenres { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Borrow> Borrows { get; set; }
     public DbSet<Rental> Rentals { get; set; }
@@ -28,12 +33,6 @@ public class LibraryContext : DbContext
     {
         optionsBuilder.UseMySql("server=localhost;port=3306;user=root;password=1234567890;database=CourseWorkProto1;",
                                 new MySqlServerVersion(new Version(8, 0, 34)));
-    }
-
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        DBInitializer.Seed(modelBuilder);
     }
 
 }

@@ -39,7 +39,6 @@ CREATE TABLE Movies (
     DiscId INT NOT NULL,
     Duration INT NOT NULL,
     Director NVARCHAR(255),
-    Genre INT NOT NULL,
     FOREIGN KEY (DiscId) REFERENCES Discs(DiscId) ON DELETE CASCADE
 );
 
@@ -51,20 +50,19 @@ CREATE TABLE Actors (
 
 -- Таблиця для зв'язку фільмів з акторами
 CREATE TABLE ActorMovie (
-    MovieId INT NOT NULL,
-    ActorId INT NOT NULL,
-    FOREIGN KEY (MovieId) REFERENCES Movies(MovieId) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (ActorId) REFERENCES Actors(ActorId) ON DELETE CASCADE ON UPDATE CASCADE,
-    PRIMARY KEY (MovieId, ActorId)
+    MoviesMovieId INT NOT NULL,
+    ActorsActorId INT NOT NULL,
+    FOREIGN KEY (MoviesMovieId) REFERENCES Movies(MovieId) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (ActorsActorId) REFERENCES Actors(ActorId) ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY (MoviesMovieId, ActorsActorId)
 );
 
 -- Таблиця для музичних дисків
 CREATE TABLE Music (
     MusicId INT PRIMARY KEY AUTO_INCREMENT,
     DiscId INT NOT NULL,
-    Artist NVARCHAR(255),
-    Genre INT NOT NULL,
     TrackCount INT,
+    Artist NVARCHAR(255),
     FOREIGN KEY (DiscId) REFERENCES Discs(DiscId) ON DELETE CASCADE
 );
 
@@ -72,9 +70,8 @@ CREATE TABLE Music (
 CREATE TABLE Games (
     GameId INT PRIMARY KEY AUTO_INCREMENT,
     DiscId INT NOT NULL,
-    Platform INT NOT NULL,
-    Genre INT NOT NULL,
     Developer NVARCHAR(255),
+    Publisher NVARCHAR(255),
     FOREIGN KEY (DiscId) REFERENCES Discs(DiscId) ON DELETE CASCADE
 );
 
@@ -83,7 +80,6 @@ CREATE TABLE Books (
     BookId INT PRIMARY KEY AUTO_INCREMENT,
     ProductId INT NOT NULL,
     Author NVARCHAR(255),
-    Genre INT NOT NULL,
     PublicationYear INT,
     FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE
 );
@@ -111,4 +107,64 @@ CREATE TABLE Rentals (
     PaymentAmount DECIMAL(10, 2),
     FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
     FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE
+);
+
+-- Таблиця для жанрів книг
+CREATE TABLE BookGenres (
+    GenreId INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(255) NOT NULL
+);
+
+-- Таблиця для жанрів музики
+CREATE TABLE MusicGenres (
+    GenreId INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(255) NOT NULL
+);
+
+-- Таблиця для жанрів фільмів
+CREATE TABLE MovieGenres (
+    GenreId INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(255) NOT NULL
+);
+
+-- Таблиця для жанрів ігор
+CREATE TABLE GameGenres (
+    GenreId INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(255) NOT NULL
+);
+
+-- Таблиця для зв'язку книг і жанрів
+CREATE TABLE BookBookGenre (
+    BooksBookId INT NOT NULL,
+    GenreId INT NOT NULL,
+    FOREIGN KEY (BooksBookId) REFERENCES Books(BookId) ON DELETE CASCADE,
+    FOREIGN KEY (GenreId) REFERENCES BookGenres(GenreId) ON DELETE CASCADE,
+    PRIMARY KEY (BooksBookId, GenreId)
+);
+
+-- Таблиця для зв'язку музики і жанрів
+CREATE TABLE MusicMusicGenre (
+    MusicId INT NOT NULL,
+    GenreId INT NOT NULL,
+    FOREIGN KEY (MusicId) REFERENCES Music(MusicId) ON DELETE CASCADE,
+    FOREIGN KEY (GenreId) REFERENCES MusicGenres(GenreId) ON DELETE CASCADE,
+    PRIMARY KEY (MusicId, GenreId)
+);
+
+-- Таблиця для зв'язку фільмів і жанрів
+CREATE TABLE MovieMovieGenre (
+    MoviesMovieId INT NOT NULL,
+    GenreId INT NOT NULL,
+    FOREIGN KEY (MoviesMovieId) REFERENCES Movies(MovieId) ON DELETE CASCADE,
+    FOREIGN KEY (GenreId) REFERENCES MovieGenres(GenreId) ON DELETE CASCADE,
+    PRIMARY KEY (MoviesMovieId, GenreId)
+);
+
+-- Таблиця для зв'язку ігор і жанрів
+CREATE TABLE GameGameGenre (
+    GamesGameId INT NOT NULL,
+    GenreId INT NOT NULL,
+    FOREIGN KEY (GamesGameId) REFERENCES Games(GameId) ON DELETE CASCADE,
+    FOREIGN KEY (GenreId) REFERENCES GameGenres(GenreId) ON DELETE CASCADE,
+    PRIMARY KEY (GamesGameId, GenreId)
 );
