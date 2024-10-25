@@ -1,0 +1,56 @@
+@using Library.Models.Entities
+@using Library.Models.DTO
+@model Library.Models.DTO.ProductDto
+
+@{
+    ViewData["Title"] = "Додати гру";
+}
+
+<h2>Додати гру</h2>
+
+<form asp-action="AddGame">
+    <div class="form-group">
+        <label asp-for="Title" class="control-label">Заголовок</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group">
+        <label asp-for="Disc.Format" class="control-label">Формат</label>
+            <select asp-for="Disc.Format" class="form-control">
+                @foreach (var format in Enum.GetValues(typeof(DiscFormat)))
+                {
+                    <option value="@format">@format</option>
+                }
+            </select>
+        <span asp-validation-for="Disc.Format" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Disc.Year" class="control-label">Рік</label>
+        <input asp-for="Disc.Year" class="form-control" />
+        <span asp-validation-for="Disc.Year" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Disc.Game.Developer" class="control-label">Розробник</label>
+        <input asp-for="Disc.Game.Developer" class="form-control" />
+        <span asp-validation-for="Disc.Game.Developer" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Disc.Game.Publisher" class="control-label">Видавець</label>
+        <input asp-for="Disc.Game.Publisher" class="form-control" />
+        <span asp-validation-for="Disc.Game.Publisher" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Disc.Game.Genre" class="control-label">Жанри</label>
+        <input asp-for="Disc.Game.Genre" class="form-control" placeholder="Жанр1, Жанр2" />
+        <span asp-validation-for="Disc.Game.Genre" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-2">
+        <input type="submit" value="Додати" class="btn btn-primary" />
+    </div>
+</form>

@@ -8,10 +8,18 @@
     <h1 class="display-4">Каталог книг та дисків</h1>
     <p>Перелік всіх книг та дисків інформаційної системи <a asp-controller="Home" asp-action="Index">Домашньої бібліотеки</a>.</p>
     <div class="text-center mb-5 mt-5">
-        <button class="btn btn-primary" asp-controller="Catalog" asp-action="AddBook">Додати книгу</button>
-        <button class="btn btn-primary" asp-controller="Catalog" asp-action="AddMovie">Додати фільм</button>
-        <button class="btn btn-primary" asp-controller="Catalog" asp-action="AddMusic">Додати музику</button>
-        <button class="btn btn-primary" asp-controller="Catalog" asp-action="AddGame">Додати гру</button>
+        <a class="btn btn-primary" asp-action="AddBook" asp-controller="Catalog">
+            Додати книгу
+        </a>
+        <a class="btn btn-primary" asp-action="AddMovie"  asp-controller="Catalog">
+            Додати фільм
+        </a>
+        <a class="btn btn-primary" asp-action="AddMusic" asp-controller="Catalog">
+            Додати музику
+        </a>
+        <a class="btn btn-primary" asp-action="AddGame" asp-controller="Catalog">
+            Додати гру
+        </a>
     </div>
 
 </div>

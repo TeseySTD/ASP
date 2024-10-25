@@ -13,6 +13,7 @@ public class ProductDto
     public BookDto Book { get; set; }
 
     public DiscDto Disc { get; set; }
+    public int? OwnerId { get; set; }
 }
 
 public class BookDto
@@ -25,6 +26,7 @@ public class BookDto
     [RegularExpression(pattern:"^[a-zA-Zа-яА-ЯЇїІіЄєҐґ\\s]+(,[a-zA-Zа-яА-ЯЇїІіЄєҐґ\\s]+)*$", ErrorMessage = "Неправильний список жанрів")]
     public string Genre { get; set; }
 
+    [Required(ErrorMessage = "Рік видання обов'язковий")]
     [Range(1800, 2024, ErrorMessage = "Рік видання має бути між 1800 та 2024")]
     public int PublicationYear { get; set; }
 }
@@ -48,6 +50,7 @@ public class MovieDto
     [StringLength(50, ErrorMessage = "Ім'я режисера не може перевищувати 50 символів")]
     public string Director { get; set; }
 
+    [Required(ErrorMessage = "Тривалість обов'язкова")]
     [Range(1, 6000, ErrorMessage = "Тривалість некоректна")]
     public int Duration { get; set; }
 
@@ -62,8 +65,8 @@ public class MovieDto
 
 public class MusicDto
 {
-    [StringLength(255, MinimumLength = 1, ErrorMessage = "Виконавець має бути від 1 до 255 символів")]
     [Required(ErrorMessage = "Артист обов'язковий")]
+    [StringLength(255, MinimumLength = 1, ErrorMessage = "Виконавець має бути від 1 до 255 символів")]
     public string Artist { get; set; }
 
     [Required(ErrorMessage = "Жанр обов'язковий")]
@@ -79,7 +82,6 @@ public class GameDto
 {
     [Required(ErrorMessage = "Розробник обов'язковий")]
     [StringLength(255, MinimumLength = 1, ErrorMessage = "Розробник має бути від 1 до 255 символів")]
-
     public string Developer { get; set; }
 
     [Required(ErrorMessage = "Видавець обов'язковий")]

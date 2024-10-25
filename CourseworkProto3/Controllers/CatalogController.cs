@@ -1,6 +1,7 @@
 using Library.Data.Repo;
 using Library.Models.DTO;
 using Library.Models.Entities;
+using Library.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Controllers
@@ -94,7 +95,6 @@ namespace Library.Controllers
             return View(dto);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Update(ProductDto dto)
         {
@@ -106,5 +106,48 @@ namespace Library.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public IActionResult AddBook(){
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddBook(ProductDto dto){
+            dto.OwnerId = JwtService.GetUserIdFromToken(Request.Cookies["access-cookie"]);
+            await _productRepository.AddBook(dto);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult AddMovie(){
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddMovie(ProductDto dto){
+            dto.OwnerId = JwtService.GetUserIdFromToken(Request.Cookies["access-cookie"]);
+            await _productRepository.AddMovie(dto);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult AddMusic(){
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddMusic(ProductDto dto){
+            dto.OwnerId = JwtService.GetUserIdFromToken(Request.Cookies["access-cookie"]);
+            await _productRepository.AddMusic(dto);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult AddGame(){
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddGame(ProductDto dto){
+            dto.OwnerId = JwtService.GetUserIdFromToken(Request.Cookies["access-cookie"]);
+            await _productRepository.AddGame(dto);
+            return RedirectToAction("Index");
+        }
     }
 }

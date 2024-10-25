@@ -12,6 +12,7 @@ namespace Library.Services
             services.AddScoped<UserService>();
             services.AddScoped<UserRepository>();
             services.AddScoped<ProductRepository>();
+            services.AddScoped<ManyToManyService>();
             
             services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
         } 
