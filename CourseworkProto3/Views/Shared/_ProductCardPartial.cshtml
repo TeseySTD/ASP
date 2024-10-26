@@ -1,0 +1,100 @@
+@using Library.Models.Entities
+@using Library.Services
+@model Product
+
+@inject ProductService _productService
+<div class="col-md-4">
+    <div class="card mb-4" style="width: 25rem;">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Title</h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+                @if (Model.Book != null)
+                {
+                    @:Книга
+                }
+        else if (Model.Disc != null)
+        {
+            switch(Model.Disc.DiscType) 
+                    {
+                        case DiscType.Movie : @:Фільм
+                        break;
+                        case DiscType.Music : @:Музика
+                        break;
+                        case DiscType.Game : @:Гра
+                        break;
+                        default : @:Диск
+                        break;
+                    }
+                }
+            </h6>
+            <p class="card-text">
+                @if (Model.Book != null)
+                {
+                    <strong>Автор:</strong> @Model.Book.Author <br />
+                    <strong>Жанри:</strong> @string.Join(", ", Model.Book.Genre.Select(g => g.Name))<br /> 
+                    <strong>Рік видання:</strong> @Model.Book.PublicationYear
+                }
+                else if (Model.Disc != null)
+                {
+                    <strong>Формат:</strong> @Enum.GetName(typeof(DiscFormat), Model.Disc.Format) <br />
+                    <strong>Рік:</strong> @Model.Disc.Year <br /> 
+                    if (Model.Disc.Movie != null)
+                    {
+                        <strong>Режисер:</strong> @Model.Disc.Movie.Director <br />
+                        <strong>Тривалість:</strong> @Model.Disc.Movie.Duration @:хвилин.  <br />
+                        <strong>Жанри:</strong> @string.Join(", ", Model.Disc.Movie.Genre.Select(g => g.Name))<br />
+                        <strong>Актори:</strong> 
+                        @string.Join(", ", Model.Disc.Movie.Actors.Select(a => a.Name))
+                    }
+                    else if (Model.Disc.Music != null)
+                    {
+                        <strong>Артист:</strong> @Model.Disc.Music.Artist <br />
+                        <strong>Жанри:</strong> @string.Join(", ", Model.Disc.Music.Genre.Select(g => g.Name))<br />
+                        <strong>Треки:</strong> @Model.Disc.Music.TrackCount
+                    }
+                    else if (Model.Disc.Game != null)
+                    {
+                        <strong>Жанри:</strong> @string.Join(", ", Model.Disc.Game.Genre.Select(g => g.Name)) <br />
+                        <strong>Видавець:</strong> @Model.Disc.Game.Publisher <br />
+                        <strong>Розробник:</strong> @Model.Disc.Game.Developer
+                    }
+                }
+                <br />
+                <strong>Власник:</strong> @Model.Owner.Login <br />
+                @if (await _productService.IsProductBorrowed(Model.ProductId))
+                {
+                    var borrow = await _productService.GetBorrowByProductId(Model.ProductId);
+                    var therm = borrow.BorrowEndDate - borrow.BorrowStartDate;
+                    var remainingTime = borrow.BorrowEndDate - DateTime.Now;
+                    var isOverdue = remainingTime.Hours < 0;
+
+                    var daysLeft = isOverdue ? 0 : remainingTime.Days;
+                    var hoursLeft = isOverdue ? 0 : remainingTime.Hours;
+
+                    var overdueDays = isOverdue ? Math.Abs(remainingTime.Days) : 0;
+                    var overdueHours = isOverdue ? Math.Abs(remainingTime.Hours) : 0;
+
+                    <strong>Позичено користувачу</strong> @($"{borrow.Borrower.Login} ({borrow.Borrower.Email})") <br />
+                    <strong>Термін позичання:</strong> @(therm.Days) @:днів.<br />
+                    @if (isOverdue)
+                    {
+                        <p class="text-danger">
+                            <strong>Час позичання вичерпано!</strong><br />
+                            Заборговано на: @($"{overdueDays} днів та {overdueHours} годин.")
+                        </p>
+                    }
+                    else
+                    {
+                        <strong>Залишилось:</strong> @($"{daysLeft} днів та {hoursLeft} годин.")
+                    }
+                }
+            </p>
+            <a href="@Url.Action("Update", "Catalog", new { id = Model.ProductId })" class="card-link">Редагувати</a>
+            <a href="@Url.Action("Delete", "Catalog", new { id = Model.ProductId })" class="card-link text-danger">Видалити</a>
+            @if (!await _productService.IsProductBorrowed(Model.ProductId))
+            {
+                <a href="@Url.Action("Borrow", "Catalog", new { id = Model.ProductId })" class="card-link text-secondary">Позичити</a>
+            }
+        </div>
+    </div>
+</div>

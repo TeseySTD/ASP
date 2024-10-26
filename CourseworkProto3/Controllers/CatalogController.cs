@@ -9,16 +9,19 @@ namespace Library.Controllers
     public class CatalogController : Controller
     {
         private readonly ProductRepository _productRepository;
+        private readonly ProductService _productService;
 
-        public CatalogController(ProductRepository productRepository)
+        public CatalogController(ProductRepository productRepository
+                                , ProductService productService)
         {
             _productRepository = productRepository;
+            _productService = productService;
         }
 
         // GET: Catalog
         public async Task<ActionResult> Index()
         {
-            var products = await _productRepository.GetAll();
+            var products = await _productRepository.GetFull();
             return View(products);
         }
 
@@ -30,7 +33,7 @@ namespace Library.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
-            var product = await _productRepository.GetById(id);
+            var product = await _productRepository.GetFullById(id);
 
             if (product == null)
             {
@@ -147,6 +150,29 @@ namespace Library.Controllers
         public async Task<IActionResult> AddGame(ProductDto dto){
             dto.OwnerId = JwtService.GetUserIdFromToken(Request.Cookies["access-cookie"]);
             await _productRepository.AddGame(dto);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Borrow(int id){
+            if(await _productRepository.ProductExists(id) && !await _productService.IsProductBorrowed(id)){
+                var product = await _productRepository.GetById(id);
+                var dto = new BorrowDto{
+                    ProductId = id,
+                    BorrowerId = (int)JwtService.GetUserIdFromToken(Request.Cookies["access-cookie"]),
+                    LenderId = product.OwnerId,
+                    BorrowStartDate = DateTime.Now,
+                    BorrowEndDate = DateTime.Now.AddDays(1)
+                };
+                return View(dto);
+            }
+            else
+                return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Borrow(BorrowDto dto){
+            await _productService.BorrowProduct(dto);
             return RedirectToAction("Index");
         }
     }

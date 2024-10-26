@@ -41,5 +41,16 @@ namespace Library.Controllers
             }
         }
 
+        public IActionResult ValidateEndDate(DateTime BorrowEndDate){
+            if (BorrowEndDate > DateTime.Now)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json(false);
+            }
+        }
+
     }
 }

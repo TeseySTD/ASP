@@ -30,6 +30,18 @@ public class ProductRepository
 
     public async Task<Product?> GetById(int id){
         return await _context.Products
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(p => p.ProductId == id);
+    }
+
+
+    public async Task<Product?> GetByIdWitTracking(int id){
+        return await _context.Products
+                        .FirstOrDefaultAsync(p => p.ProductId == id);
+    }
+
+    public async Task<Product?> GetFullById(int id){
+        return await _context.Products
                     .Include(p => p.Book)
                         .ThenInclude(b => b.Genre)
                     .Include(p => p.Disc)
@@ -49,7 +61,7 @@ public class ProductRepository
                     .FirstOrDefaultAsync(p => p.ProductId == id);
     }
 
-    private async Task<Product?> GetByIdWithTracking(int id){
+    public async Task<Product?> GetFullByIdWithTracking(int id){
         return await _context.Products
                     .Include(p => p.Book)
                         .ThenInclude(b => b.Genre)
@@ -69,7 +81,7 @@ public class ProductRepository
                     .FirstOrDefaultAsync(p => p.ProductId == id);
     }
 
-    public async Task<List<Product>> GetAll(){
+    public async Task<List<Product>> GetFull(){
         return await _context.Products
                     .Include(p => p.Book)
                         .ThenInclude(b => b.Genre)
@@ -98,7 +110,7 @@ public class ProductRepository
 
     public async Task Update(ProductDto dto)
     {
-        var product = await GetByIdWithTracking(dto.ProductId);
+        var product = await GetFullByIdWithTracking(dto.ProductId);
 
         if (product == null)
         {
