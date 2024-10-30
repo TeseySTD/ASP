@@ -24,6 +24,12 @@ namespace Library.Data.Repo
             return user;
         }
 
+        public async Task<User?> GetUserByEmail(string email){
+            return await _context.Users
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(u => u.Email == email);
+        }
+
         public async Task AddUser(User user)
         {
             await _context.Users.AddAsync(user);

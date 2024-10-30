@@ -4,11 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Models.DTO;
 
-public class BorrowDto
+public class GiveDTO
 {
     public int ProductId { get; set; }
-    public int BorrowerId { get; set; }
     public int LenderId { get; set; }
+
+    [Required(ErrorMessage = "Обов'язкове поле.")]
+    [Remote("IsEmailAvailableForCurrentUser", "Validation")]
+    public string Email { get; set; } = null!;
 
     [Required(ErrorMessage = "Обов'язкове поле")]
     [DataType(DataType.Date)]
@@ -17,6 +20,6 @@ public class BorrowDto
     [Required(ErrorMessage = "Обов'язкове поле")]
     [Remote("ValidateEndDate", "Validation", ErrorMessage = "Дата повинна бути більшою за поточну")]
     [DataType(DataType.Date)]
-    public DateTime BorrowEndDate { get; set; }
+    public DateTime BorrowEndDate { get; set; } 
 
 }

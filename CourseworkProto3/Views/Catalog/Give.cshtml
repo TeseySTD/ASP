@@ -1,17 +1,17 @@
 @using Library.Data.Repo
 @using Library.Models.DTO
 @using Library.Models.Entities
-@model BorrowDto
+@model GiveDTO
 
 @inject ProductRepository _productRepository
 
 @{
-    ViewData["Title"] = "Позичити";
+    ViewData["Title"] = "Віддати";
     var product = await _productRepository.GetFullById(Model.ProductId); // Async fetch
 }
 
 <div class="container mt-5">
-    <h1 class="display-4 text-center mb-4">Позичити @((int)product.ProductType == 1 ? "книгу" : "диск")</h1>
+    <h1 class="display-4 text-center mb-4">Позичити @((int)product.ProductType == 1? "книгу" : "диск")</h1>
 
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
@@ -24,17 +24,23 @@
 
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <form asp-action="Borrow">
+                    <form asp-action="Give">
                         <input type="hidden" asp-for="ProductId" />
                         <input type="hidden" asp-for="LenderId" />
-                        <input type="hidden" asp-for="BorrowerId" />
                         <input type="hidden" asp-for="BorrowStartDate" />
+
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label">Кому:</label>
+                            <input asp-for="Email" class="form-control" placeholder="Введіть пошту отримувача" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
 
                         <div class="form-group">
                             <label asp-for="BorrowEndDate" class="control-label">Дата закінчення</label>
                             <input asp-for="BorrowEndDate" class="form-control" />
                             <span asp-validation-for="BorrowEndDate" class="text-danger"></span>
                         </div>
+
                         <div class="form-group text-center mt-4">
                             <input type="submit" value="Позичити" class="btn btn-primary btn-lg px-4" />
                         </div>

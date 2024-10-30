@@ -28,6 +28,17 @@ namespace Library.Controllers
         }
 
         [AcceptVerbs("Get", "Post")]
+        public IActionResult IsEmailAvailableForCurrentUser(string email){
+            var token = HttpContext.Request.Cookies["access-cookie"];
+            if(!_userRepository.IsEmailTaken(email))
+                return Json("Такої пошти не існує в бібліотеці.");
+            else if(_userRepository.GetUserByToken(token).Email == email)
+                return Json("Ви не можете використовувати вашу пошту.");
+            else
+                return Json(true);
+        }
+
+        [AcceptVerbs("Get", "Post")]
         public IActionResult ValidatePassword(string email, string password)
         {
 

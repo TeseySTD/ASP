@@ -2,20 +2,26 @@ using Library.Data.Repo;
 using Library.Models.DTO;
 using Library.Models.Entities;
 using Library.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Controllers
 {
+    [Authorize]
     public class CatalogController : Controller
     {
         private readonly ProductRepository _productRepository;
         private readonly ProductService _productService;
 
+        private readonly UserRepository _userRepository;
+
         public CatalogController(ProductRepository productRepository
-                                , ProductService productService)
+                                , ProductService productService
+                                , UserRepository userRepository)
         {
             _productRepository = productRepository;
             _productService = productService;
+            _userRepository = userRepository;
         }
 
         // GET: Catalog
@@ -155,10 +161,11 @@ namespace Library.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Borrow(int id){
-            if(await _productRepository.ProductExists(id) && !await _productService.IsProductBorrowed(id)){
+            if(await _productRepository.ProductExists(id) && !await _productService.IsProductBorrowed(id) 
+                && !await _productService.IsUserOwner(id, Request.Cookies["access-cookie"])){
                 var product = await _productRepository.GetById(id);
                 var dto = new BorrowDto{
-                    ProductId = id,
+                    ProductId = id,  
                     BorrowerId = (int)JwtService.GetUserIdFromToken(Request.Cookies["access-cookie"]),
                     LenderId = product.OwnerId,
                     BorrowStartDate = DateTime.Now,
@@ -174,6 +181,48 @@ namespace Library.Controllers
         public async Task<IActionResult> Borrow(BorrowDto dto){
             await _productService.BorrowProduct(dto);
             return RedirectToAction("Index");
+        }
+
+        [HttpGet] 
+        public async Task<IActionResult> Give(int id){
+            if(await _productRepository.ProductExists(id) && !await _productService.IsProductBorrowed(id) 
+                && await _productService.IsUserOwner(id, Request.Cookies["access-cookie"])){
+                var product = await _productRepository.GetById(id);
+                var dto = new GiveDTO{
+                    ProductId = id,
+                    LenderId = product.OwnerId,
+                    BorrowStartDate = DateTime.Now,
+                    BorrowEndDate = DateTime.Now.AddDays(1)
+                };
+                return View(dto);
+            }
+            else
+                return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Give(GiveDTO dto){
+            var borrower = await _userRepository.GetUserByEmail(dto.Email);
+            var borrowDto = new BorrowDto{
+                ProductId = dto.ProductId,
+                LenderId = dto.LenderId,
+                BorrowerId = borrower.UserId,
+                BorrowStartDate = dto.BorrowStartDate,
+                BorrowEndDate = dto.BorrowEndDate
+            };
+            
+            await _productService.BorrowProduct(borrowDto);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Return(int id){
+            if(await _productService.IsProductBorrowedByUser(id, Request.Cookies["access-cookie"])){
+                await _productService.ReturnProduct(id);
+                return RedirectToAction("Index");
+            }
+            else
+                return NotFound();
         }
     }
 }

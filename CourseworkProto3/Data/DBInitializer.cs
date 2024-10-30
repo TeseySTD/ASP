@@ -92,12 +92,16 @@ public static class DBInitializer
                     new Product { ProductId = 1, Title = "Великий Гетсбі", ProductType = ProductType.Book},
                     new Product { ProductId = 2, Title = "Inception", ProductType = ProductType.Disc},
                     new Product { ProductId = 3, Title = "The Dark Side of the Moon", ProductType = ProductType.Disc},
-                    new Product { ProductId = 4, Title = "Call of Duty", ProductType = ProductType.Disc}
+                    new Product { ProductId = 4, Title = "Call of Duty", ProductType = ProductType.Disc},
+                    new Product { ProductId = 5, Title = "Zelda", ProductType = ProductType.Disc},
+                    new Product { ProductId = 6, Title = "The Lord of the Rings", ProductType = ProductType.Book}
                 };
                 products[0].Owner = users[0];
                 products[1].Owner = users[0];
-                products[2].Owner = users[1];
+                products[2].Owner = users[0];
                 products[3].Owner = users[1];
+                products[4].Owner = users[2];
+                products[5].Owner = users[3];
 
                 context.Products.AddRange(products);
                 context.SaveChanges();
@@ -107,7 +111,8 @@ public static class DBInitializer
                 {
                     new Disc { DiscId = 1, ProductId = 2, Format = DiscFormat.BluRay, Year = 2010, DiscType = DiscType.Movie },
                     new Disc { DiscId = 2, ProductId = 3, Format = DiscFormat.CD, Year = 1973, DiscType = DiscType.Music },
-                    new Disc { DiscId = 3, ProductId = 4, Format = DiscFormat.BluRay, Year = 2020, DiscType = DiscType.Game }
+                    new Disc { DiscId = 3, ProductId = 4, Format = DiscFormat.BluRay, Year = 2020, DiscType = DiscType.Game },
+                    new Disc { DiscId = 4, ProductId = 5, Format = DiscFormat.CD, Year = 1986, DiscType = DiscType.Music }
                 };
                 context.Discs.AddRange(discs);
                 context.SaveChanges();
@@ -153,7 +158,8 @@ public static class DBInitializer
                 // Add Books
                 var books = new List<Book>
                 {
-                    new Book { BookId = 1, ProductId = 1, Author = "F. Scott Fitzgerald", Genre = bookGenres, PublicationYear = 1925 }
+                    new Book { BookId = 1, ProductId = 1, Author = "F. Scott Fitzgerald", Genre = bookGenres, PublicationYear = 1925 },
+                    new Book { BookId = 2, ProductId = 6, Author = "J. R. R. Tolkien", Genre = bookGenres, PublicationYear = 1954 }
                 };
                 context.Books.AddRange(books);
                 context.SaveChanges();
@@ -169,7 +175,8 @@ public static class DBInitializer
                 // Add Games
                 var games = new List<Game>
                 {
-                    new Game { GameId = 1, DiscId = 3, Developer = "Activision", Publisher = "Activision", Genre = gameGenres }
+                    new Game { GameId = 1, DiscId = 3, Developer = "Activision", Publisher = "Activision", Genre = gameGenres },
+                    new Game { GameId = 2, DiscId = 4, Developer = "Nintendo", Publisher = "Nintendo", Genre = gameGenres }
                 };
                 context.Games.AddRange(games);
                 context.SaveChanges();
@@ -185,20 +192,22 @@ public static class DBInitializer
                 // Додати позичення
                 var borrows = new List<Borrow>
                 {
-                    new Borrow { BorrowId = 1, LenderId = 1, BorrowerId = 2, ProductId = 1, BorrowStartDate = DateTime.Now.AddDays(-5), BorrowEndDate = DateTime.Now.AddDays(5) },
-                    new Borrow { BorrowId = 2, LenderId = 2, BorrowerId = 1, ProductId = 2, BorrowStartDate = DateTime.Now.AddDays(-3), BorrowEndDate = DateTime.Now.AddDays(7)}
+                    new Borrow { BorrowId = 1, LenderId = 1, BorrowerId = 2, ProductId = 1, BorrowStartDate = DateTime.Now.AddDays(-5), BorrowEndDate = DateTime.Now },
+                    new Borrow { BorrowId = 2, LenderId = 1, BorrowerId = 2, ProductId = 2, BorrowStartDate = DateTime.Now.AddDays(-3), BorrowEndDate = DateTime.Now.AddDays(7) },
+                    // new Borrow { BorrowId = 3, LenderId = 3, BorrowerId = 1, ProductId = 3, BorrowStartDate = DateTime.Now.AddDays(-2), BorrowEndDate = DateTime.Now.AddDays(-1)}
+                    
                 };
                 context.Borrows.AddRange(borrows);
                 context.SaveChanges();
 
                 // Add Orders
-                var orders = new List<Rental>
-                {
-                    new Rental { RentalId = 1, UserId = 1, ProductId = 3, RentalStartDate = DateTime.Now.AddDays(-2), RentalEndDate=DateTime.Now, PaymentAmount = 10.0M },
-                    new Rental { RentalId = 2, UserId = 2, ProductId = 4, RentalStartDate = DateTime.Now.AddDays(-1), RentalEndDate=DateTime.Now, PaymentAmount = 15.0M }
-                };
-                context.Rentals.AddRange(orders);
-                context.SaveChanges();
+                // var orders = new List<Rental>
+                // {
+                //     new Rental { RentalId = 1, UserId = 1, ProductId = 3, RentalStartDate = DateTime.Now.AddDays(-2), RentalEndDate=DateTime.Now, PaymentAmount = 10.0M },
+                //     new Rental { RentalId = 2, UserId = 2, ProductId = 4, RentalStartDate = DateTime.Now.AddDays(-1), RentalEndDate=DateTime.Now, PaymentAmount = 15.0M }
+                // };
+                // context.Rentals.AddRange(orders);
+                // context.SaveChanges();
             }
 
         }

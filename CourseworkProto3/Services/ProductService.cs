@@ -34,10 +34,37 @@ public class ProductService{
         await _context.SaveChangesAsync();
     }
 
+    public async Task ReturnProduct(int productId){
+        var borrow = await GetBorrowByProductId(productId);
+        if(borrow == null){
+            return;
+        }
+        _context.Borrows.Remove(borrow);
+        await _context.SaveChangesAsync();
+    }
 
     public async Task<bool> IsProductBorrowed(int productId){
         return await _context.Borrows
             .AnyAsync(b => b.ProductId == productId);
+    }
+
+    public async Task<bool> IsProductBorrowedByUser(int productId, string token){
+        return await _context.Borrows
+            .AnyAsync(b => b.ProductId == productId && b.BorrowerId == JwtService.GetUserIdFromToken(token));
+    }
+
+    public async Task<bool> IsUserOwner(int productId, string token)
+    {
+        var userId = JwtService.GetUserIdFromToken(token);
+
+        if (userId == null)
+        {
+            return false;
+        }
+
+        var product = await _productRepository.GetById(productId);
+
+        return product?.OwnerId == userId.Value;
     }
 
     public async Task<Borrow?> GetBorrowByProductId(int productId){
