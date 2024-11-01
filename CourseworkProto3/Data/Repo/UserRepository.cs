@@ -62,6 +62,10 @@ namespace Library.Data.Repo
             return user;
         }
 
+        public User GetOwnerOfLibrary(){
+            return _context.Users.FirstOrDefault(u => u.Role == Roles.Owner);
+        }
+
         public bool IsLoginTaken(string login){
             return _context.Users.Any(u => u.Login == login);
         }

@@ -201,13 +201,12 @@ public static class DBInitializer
                 context.SaveChanges();
 
                 // Add Orders
-                // var orders = new List<Rental>
-                // {
-                //     new Rental { RentalId = 1, UserId = 1, ProductId = 3, RentalStartDate = DateTime.Now.AddDays(-2), RentalEndDate=DateTime.Now, PaymentAmount = 10.0M },
-                //     new Rental { RentalId = 2, UserId = 2, ProductId = 4, RentalStartDate = DateTime.Now.AddDays(-1), RentalEndDate=DateTime.Now, PaymentAmount = 15.0M }
-                // };
-                // context.Rentals.AddRange(orders);
-                // context.SaveChanges();
+                var orders = new List<Order>
+                {
+                    new Order{ OrderId = 1, ProductId = 3, UserId = 1, StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(7) , PaymentAmount = 5.00m, Status = OrderStatus.Ordered },
+                };
+                context.Orders.AddRange(orders);
+                context.SaveChanges();
             }
 
         }

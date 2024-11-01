@@ -9,6 +9,7 @@
 <div class="text-center">
     <h1 class="display-4">Каталог книг та дисків</h1>
     <p>Перелік всіх книг та дисків інформаційної системи <a asp-controller="Home" asp-action="Index">Домашньої бібліотеки</a>.</p>
+    <p><a asp-controller="Order" asp-action="Index">Книги та диски на замовлення</a>.</p>
     <div class="text-center mb-5 mt-5">
         <a class="btn btn-primary" asp-action="AddBook" asp-controller="Catalog">
             Додати книгу
@@ -29,6 +30,8 @@
 <div class="row">
     @foreach (var product in Model)
     {
-        @await Html.PartialAsync("_ProductCardPartial", product);
+        if(!await _productService.IsProductForOrder(product.ProductId) || await _productService.IsProductOrdered(product.ProductId)){
+            @await Html.PartialAsync("_ProductCardPartial", product);
+        }
     }
 </div>

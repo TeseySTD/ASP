@@ -19,7 +19,7 @@ CREATE TABLE Products (
     ProductId INT PRIMARY KEY AUTO_INCREMENT,
     Title NVARCHAR(255) NOT NULL,
     ProductType INT NOT NULL,
-    OwnerId INT NOT NULL,
+    OwnerId INT,
     FOREIGN KEY (OwnerId) REFERENCES Users(UserId) ON DELETE CASCADE
 );
 
@@ -97,17 +97,19 @@ CREATE TABLE Borrows (
     FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE
 );
 
--- Таблиця для оренди
-CREATE TABLE Rentals (
-    RentalId INT PRIMARY KEY AUTO_INCREMENT,
-    UserId INT NOT NULL,
-    ProductId INT NOT NULL,
-    RentalStartDate DATE NOT NULL,
-    RentalEndDate DATE,
-    PaymentAmount DECIMAL(10, 2),
-    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
-    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE
+-- Таблиця для замовленнь продуктів 
+CREATE TABLE Orders (
+    OrderId INT PRIMARY KEY AUTO_INCREMENT,
+    UserId INT, -- користувач, який  замовляє
+    ProductId INT, -- продукт, який замовлений
+    StartDate DATE, -- дата початку оренди 
+    EndDate DATE, -- дата завершення оренди
+    PaymentAmount DECIMAL(7, 2) DEFAULT 0.0,
+    Status INT, -- статус замовлення
+    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE SET NULL,
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE SET NULL
 );
+
 
 -- Таблиця для жанрів книг
 CREATE TABLE BookGenres (

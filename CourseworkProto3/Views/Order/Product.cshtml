@@ -1,0 +1,43 @@
+@using Library.Data.Repo
+@using Library.Models.DTO
+@using Library.Models.Entities
+@model OrderDTO
+
+@inject ProductRepository _productRepository
+
+@{
+    ViewData["Title"] = "Замовити";
+    var product = await _productRepository.GetFullById(Model.ProductId); 
+}
+
+<div class="container mt-5">
+    <h1 class="display-4 text-center mb-4">Оформити замовлення на @((int)product.ProductType == 1 ? "книгу" : "диск")</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@product.Title</h5>
+                    <p class="card-text"><strong>Ціна:</strong> @Model.PaymentAmount грн.</p>
+                    <p class="card-text"><strong>Дата закінчення:</strong> @Model.EndDate.ToString("dd.MM.yyyy")</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form asp-action="Product">
+                        <input type="hidden" asp-for="ProductId" />
+                        <input type="hidden" asp-for="UserId" />
+                        <input type="hidden" asp-for="StartDate" />
+                        <input type="hidden" asp-for="EndDate" />
+                        <input type="hidden" asp-for="PaymentAmount" />
+
+                        <div class="form-group text-center mt-4">
+                            <input type="submit" value="Позичити" class="btn btn-primary btn-lg px-4" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

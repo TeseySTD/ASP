@@ -1,0 +1,21 @@
+@using Library.Models.Entities
+@using Library.Services
+@inject ProductService _productService
+@model IEnumerable<Library.Models.Entities.Product>
+@{
+    ViewData["Title"] = "Каталог на  замовлення";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Каталог книг та дисків на замовлення</h1>
+    <p>Перелік всіх книг та дисків на замовлення інформаційної системи <a asp-controller="Home" asp-action="Index">Домашньої бібліотеки</a>.</p>
+</div>
+
+<div class="row">
+    @foreach (var product in Model)
+    {
+        if(await _productService.IsProductForOrder(product.ProductId) && !await _productService.IsProductOrdered(product.ProductId)){
+            @await Html.PartialAsync("_ProductCardPartial", product);
+        }
+    }
+</div>

@@ -3,29 +3,31 @@
 @model Product
 
 @inject ProductService _productService
+@inject OrderService _orderService
+
 <div class="col-md-4">
     <div class="card mb-4" style="width: 25rem;">
         <div class="card-body">
             <h5 class="card-title">@Model.Title</h5>
             <h6 class="card-subtitle mb-2 text-muted">
-                @if (Model.Book != null)
+            @if (Model.Book != null)
+            {
+                @:Книга
+            }
+            else if (Model.Disc != null)
+            {
+                switch(Model.Disc.DiscType) 
                 {
-                    @:Книга
+                    case DiscType.Movie : @:Фільм
+                    break;
+                    case DiscType.Music : @:Музика
+                    break;
+                    case DiscType.Game : @:Гра
+                    break;
+                    default : @:Диск
+                    break;
                 }
-        else if (Model.Disc != null)
-        {
-            switch(Model.Disc.DiscType) 
-                    {
-                        case DiscType.Movie : @:Фільм
-                        break;
-                        case DiscType.Music : @:Музика
-                        break;
-                        case DiscType.Game : @:Гра
-                        break;
-                        default : @:Диск
-                        break;
-                    }
-                }
+            }
             </h6>
             <p class="card-text">
                 @if (Model.Book != null)
@@ -64,47 +66,68 @@
                 @if (await _productService.IsProductBorrowed(Model.ProductId))
                 {
                     var borrow = await _productService.GetBorrowByProductId(Model.ProductId);
-                    var therm = borrow.BorrowEndDate - borrow.BorrowStartDate;
-                    var remainingTime = borrow.BorrowEndDate - DateTime.Now;
-                    var isOverdue = remainingTime.Hours < 0;
+                    var (timeText, overdue) = GetRemainingTimeText(borrow.BorrowEndDate);
 
-                    var daysLeft = isOverdue ? 0 : remainingTime.Days;
-                    var hoursLeft = isOverdue ? 0 : remainingTime.Hours;
-
-                    var overdueDays = isOverdue ? Math.Abs(remainingTime.Days) : 0;
-                    var overdueHours = isOverdue ? Math.Abs(remainingTime.Hours) : 0;
-
-                    <strong>Позичено користувачу</strong> @($"{borrow.Borrower.Login} ({borrow.Borrower.Email})") <br />
-                    <strong>Позичено:</strong> @(borrow.BorrowStartDate.ToString("dd.MM.yyyy HH"))<br />
-                    <strong>Потрібно повернути:</strong> @(borrow.BorrowEndDate.ToString("dd.MM.yyyy HH"))<br />
-                    @if (isOverdue)
-                    {
-                        <p class="text-danger">
-                            <strong>Час позичання вичерпано!</strong><br />
-                            Заборговано на: @($"{overdueDays} днів та {overdueHours} годин.")
-                        </p>
-                    }
-                    else
-                    {
-                        <strong>Залишилось:</strong> @($"{daysLeft} днів та {hoursLeft} годин.")
-                    }
+                    <strong>Позичено користувачу:</strong> @($"{borrow.Borrower.Login} ({borrow.Borrower.Email})") <br />
+                    <strong>Позичено:</strong> @(borrow.BorrowStartDate.ToString("dd.MM.yyyy"))<br />
+                    <strong>Потрібно повернути:</strong> @(borrow.BorrowEndDate.ToString("dd.MM.yyyy"))<br />
+                    <p class="@(overdue ? "text-danger" : "")">
+                        <strong>@(overdue ? "Час позичання вичерпано!" : "Залишилось")</strong><br />
+                        @timeText
+                    </p>
+                }
+                else if (await _productService.IsProductOrdered(Model.ProductId))
+                {
+                    var order = await _orderService.GetOrderedOrder(Model.ProductId);
+                    var (timeText, overdue) = GetRemainingTimeText(order.EndDate.Value);
+                    @* <strong>Замовлено користувачу:</strong> @($"{order.User.Login} ({order.User.Email})") <br /> *@
+                    <strong>Дата замовлення:</strong> @(order.StartDate?.ToString("dd.MM.yyyy"))<br />
+                    <strong>Дата повернення:</strong> @(order.EndDate?.ToString("dd.MM.yyyy"))<br />
+                    <p class="@(overdue ? "text-danger" : "")">
+                        <strong>@(overdue ? "Час повернення вичерпано!" : "Залишилось")</strong><br />
+                        @timeText
+                    </p>
                 }
             </p>
-            <a href="@Url.Action("Update", "Catalog", new { id = Model.ProductId })" class="card-link">Редагувати</a>
-            <a href="@Url.Action("Delete", "Catalog", new { id = Model.ProductId })" class="card-link text-danger">Видалити</a>
-            @if (!await _productService.IsProductBorrowed(Model.ProductId))
-            {
-                if(!await _productService.IsUserOwner(Model.ProductId, Context.Request.Cookies["access-cookie"])){
-                    <a href="@Url.Action("Borrow", "Catalog", new { id = Model.ProductId })" class="card-link text-secondary">Позичити собі</a>
+
+            
+            @* Actions *@
+            @if(!await _productService.IsProductForOrder(Model.ProductId)){
+                <a href="@Url.Action("Update", "Catalog", new { id = Model.ProductId })" class="card-link">Редагувати</a>
+                <a href="@Url.Action("Delete", "Catalog", new { id = Model.ProductId })" class="card-link text-danger">Видалити</a>
+                @if (!await _productService.IsProductBorrowed(Model.ProductId))
+                {
+                    if(!await _productService.IsUserOwner(Model.ProductId, Context.Request.Cookies["access-cookie"])){
+                        <a href="@Url.Action("Borrow", "Catalog", new { id = Model.ProductId })" class="card-link text-secondary">Позичити собі</a>
+                    }
+                    else{
+                        <a href="@Url.Action("Give", "Catalog", new { id = Model.ProductId })" class="card-link text-secondary">Позичити комусь</a>
+                    }
+                    
                 }
-                else{
-                    <a href="@Url.Action("Give", "Catalog", new { id = Model.ProductId })" class="card-link text-secondary">Позичити комусь</a>
+                else if(await _productService.IsProductBorrowedByUser(Model.ProductId, Context.Request.Cookies["access-cookie"])){
+                    <a href="@Url.Action("Return", "Catalog", new { id = Model.ProductId })" class="card-link text-info">Повернути</a>
                 }
-                
             }
-            else if(await _productService.IsProductBorrowedByUser(Model.ProductId, Context.Request.Cookies["access-cookie"])){
-                <a href="@Url.Action("Return", "Catalog", new { id = Model.ProductId })" class="card-link text-info">Повернути</a>
+            else if(!await _productService.IsProductOrdered(Model.ProductId)){
+                <a href="@Url.Action("Product", "Order", new { id = Model.ProductId })" class="card-link text-info">Оформити замовлення</a>
+            }
+            else if(await _productService.IsProductOrderedByUser(Model.ProductId, Context.Request.Cookies["access-cookie"])){
+                <a href="@Url.Action("Return", "Order", new { id = Model.ProductId })" class="card-link text-info">Повернути</a>
             }
         </div>
     </div>
 </div>
+
+
+@functions {
+    private (string, bool) GetRemainingTimeText(DateTime endDate)
+    {
+        var remainingTime = endDate - DateTime.Now;
+        bool isOverdue = remainingTime.TotalSeconds < 0;
+        var days = Math.Abs(remainingTime.Days);
+        var hours = Math.Abs(remainingTime.Hours);
+        
+        return ($"{days} днів та {hours} годин", isOverdue);
+    }
+}

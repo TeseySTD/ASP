@@ -14,6 +14,8 @@ namespace Library.Services
             services.AddScoped<ProductRepository>();
             services.AddScoped<ManyToManyService>();
             services.AddScoped<ProductService>();
+            services.AddScoped<OrderService>();
+            services.AddScoped<ExternalSourceService>();
             
             services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
         } 

@@ -102,6 +102,37 @@ public class ProductRepository
                     .ToListAsync();
     }
 
+    public async Task<List<Product>> GetFullForOrder()
+    {
+        return await _context.Orders
+            .Include(o => o.Product)
+                .ThenInclude(p => p.Book)
+                    .ThenInclude(b => b.Genre)
+            .Include(o => o.Product)
+                .ThenInclude(p => p.Disc)
+                    .ThenInclude(d => d.Movie)
+                        .ThenInclude(m => m.Genre)
+            .Include(o => o.Product)
+                .ThenInclude(p => p.Disc)
+                    .ThenInclude(d => d.Movie)
+                        .ThenInclude(m => m.Actors)
+            .Include(o => o.Product)
+                .ThenInclude(p => p.Disc)
+                    .ThenInclude(d => d.Music)
+                        .ThenInclude(m => m.Genre)
+            .Include(o => o.Product)
+                .ThenInclude(p => p.Disc)
+                    .ThenInclude(d => d.Game)
+                        .ThenInclude(g => g.Genre)
+            .Include(o => o.Product)
+                .ThenInclude(p => p.Owner)
+            .Where(o => o.Status == OrderStatus.Pending && o.Product != null)
+            .Select(o => o.Product!)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+
 
     public async Task Update(Product product){
         _context.Products.Update(product);

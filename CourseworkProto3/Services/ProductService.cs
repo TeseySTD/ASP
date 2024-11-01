@@ -48,6 +48,21 @@ public class ProductService{
             .AnyAsync(b => b.ProductId == productId);
     }
 
+    public async Task<bool> IsProductOrdered(int productId){
+        return await _context.Orders
+            .AnyAsync(o => o.ProductId == productId && o.Status == OrderStatus.Ordered);
+    }
+
+    public async Task<bool> IsProductOrderedByUser(int productId, string token){
+        return await _context.Orders
+            .AnyAsync(o => o.ProductId == productId && o.Status == OrderStatus.Ordered && o.UserId == JwtService.GetUserIdFromToken(token));
+    }
+
+    public async Task<bool> IsProductForOrder(int productId){
+        return await _context.Orders
+            .AnyAsync(o => o.ProductId == productId);
+    }
+
     public async Task<bool> IsProductBorrowedByUser(int productId, string token){
         return await _context.Borrows
             .AnyAsync(b => b.ProductId == productId && b.BorrowerId == JwtService.GetUserIdFromToken(token));

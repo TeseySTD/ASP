@@ -42,12 +42,11 @@ namespace Library.Models.Entities
         Game = 3
     }
 
-    public enum GamePlatform
+
+    public enum OrderStatus
     {
-        PC = 1,
-        PS4,
-        PS5,
-        Xbox,
-        NintendoSwitch,
+        Pending = 1,     // Очікує виконання
+        Ordered,     // Замовлено
+        Returned,    // Виконано,
     }
 }

@@ -51,7 +51,7 @@ namespace Library.Controllers
                 return Json($"Невірний пароль для {email}.");
             }
         }
-
+        [AcceptVerbs("Get", "Post")]    
         public IActionResult ValidateEndDate(DateTime BorrowEndDate){
             if (BorrowEndDate > DateTime.Now)
             {

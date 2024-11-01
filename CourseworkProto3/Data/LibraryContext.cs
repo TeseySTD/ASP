@@ -19,7 +19,7 @@ public class LibraryContext : DbContext
     public DbSet<MovieGenre> MovieGenres { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Borrow> Borrows { get; set; }
-    public DbSet<Rental> Rentals { get; set; }
+    public DbSet<Order> Orders { get; set; }
 
     public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
     {

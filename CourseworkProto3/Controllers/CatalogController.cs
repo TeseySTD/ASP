@@ -12,7 +12,6 @@ namespace Library.Controllers
     {
         private readonly ProductRepository _productRepository;
         private readonly ProductService _productService;
-
         private readonly UserRepository _userRepository;
 
         public CatalogController(ProductRepository productRepository
@@ -224,5 +223,7 @@ namespace Library.Controllers
             else
                 return NotFound();
         }
+
+        
     }
 }
