@@ -2,6 +2,7 @@ using Library.Models.DTO;
 using Library.Models.Entities;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -31,8 +32,10 @@ namespace Library.Controllers
 
         [HttpGet]
         public async Task<IActionResult> AddColumn(string tableName){
-            ViewBag.TableName = tableName;
-            return View();
+            var column = new TableColumnDTO(){
+                TableName = tableName,
+            };
+            return View(column);
         }
 
         // Додавання нового поля
@@ -74,7 +77,7 @@ namespace Library.Controllers
         public async Task<IActionResult> DeleteTable(string tableName){
             if(!await _tableService.TableExists(tableName))
                 return NotFound();
-                
+
             await _tableService.DeleteTable(tableName);
             return RedirectToAction("Index");
         }

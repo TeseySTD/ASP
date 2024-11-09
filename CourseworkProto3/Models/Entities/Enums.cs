@@ -54,9 +54,7 @@ namespace Library.Models.Entities
         DATETIME = 1,
         VARCHAR,
         CHAR,
-        LONGTEXT,
         DECIMAL,
-        NVARCHAR,
         INT,
         BIGINT,
         DATE

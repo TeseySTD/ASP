@@ -16,7 +16,6 @@ public class TableService
         _context = context;
     }
 
-    // Отримання списку таблиць
     public async Task<List<string>> GetTableNamesAsync()
     {
         var tableNames = new List<string>();
@@ -29,7 +28,7 @@ public class TableService
         {
             await connection.OpenAsync();
         }
-        
+
         using (var command = connection.CreateCommand())
         {
             command.CommandText = $"SELECT table_name FROM information_schema.tables " +
@@ -47,7 +46,6 @@ public class TableService
     }
 
 
-    // Виконання SQL-запиту
     public async Task ExecuteSqlAsync(string sql)
     {
         var connection = _context.Database.GetDbConnection();
@@ -60,7 +58,6 @@ public class TableService
         await command.ExecuteNonQueryAsync();
     }
 
-    // Отримання списку полів таблиці
     public async Task<TableDTO> GetTableAsync(string tableName)
     {
         var columns = new List<TableColumnDTO>();
@@ -76,12 +73,12 @@ public class TableService
             command.CommandText = $"SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE " +
                                 $"FROM INFORMATION_SCHEMA.COLUMNS " +
                                 $"WHERE TABLE_NAME = @TableName AND TABLE_SCHEMA = @DatabaseName";
-            
+
             var tableNameParam = command.CreateParameter();
             tableNameParam.ParameterName = "@TableName";
             tableNameParam.Value = tableName;
             command.Parameters.Add(tableNameParam);
-            
+
             var databaseNameParam = command.CreateParameter();
             databaseNameParam.ParameterName = "@DatabaseName";
             databaseNameParam.Value = databaseName;
@@ -115,8 +112,8 @@ public class TableService
     public async Task AddColumn(string tableName, TableColumnDTO column)
     {
         var sql = $"ALTER TABLE {tableName} ADD {column.ColumnName} {Enum.GetName(typeof(TableDataType), column.DataType)}" +
-        $"{(column.DataType == TableDataType.NVARCHAR || column.DataType == TableDataType.VARCHAR ? $"(255)" : "")} " +
-        $"{(column.IsNullable ? "NULL" : "NOT NULL")} DEFAULT {DefaultValue(column.DataType)};";
+                    $"{(column.DataType == TableDataType.VARCHAR ? $"(255)" : "")} " +
+                    $"{(column.IsNullable ? "NULL" : "NOT NULL")} DEFAULT {DefaultValue(column.DataType)};";
 
         await ExecuteSqlAsync(sql);
     }
@@ -124,43 +121,67 @@ public class TableService
     public async Task DeleteColumn(string tableName, string columnName)
     {
         var t = await GetTableAsync(tableName);
-        
-        if(t != null && t.Columns.Count == 1)
+
+        if (t != null && t.Columns.Count == 1)
             await DeleteTable(tableName);
-        else{
+        else
+        {
             var sql = $"ALTER TABLE {tableName} DROP COLUMN {columnName};";
             await ExecuteSqlAsync(sql);
         }
     }
 
-    public async Task EditColumn(string tableName, TableColumnDTO column){
-        await DeleteColumn(tableName, column.ColumnName);
-        await AddColumn(tableName, column);
+    public async Task EditColumn(string tableName, TableColumnDTO column)
+    {
+        var table = await GetTableAsync(tableName);
+        if (table.Columns.Count() > 1)
+        {
+            await DeleteColumn(tableName, column.ColumnName);
+            await AddColumn(tableName, column);
+        }
+        else
+        {
+            var sql = $"ALTER TABLE {tableName} CHANGE COLUMN {column.ColumnName} {column.ColumnName} {Enum.GetName(typeof(TableDataType), column.DataType)}" +
+            $"{(column.DataType == TableDataType.VARCHAR ? $"(255)" : "")} " +
+            $"{(column.IsNullable ? "NULL" : "NOT NULL")} DEFAULT {DefaultValue(column.DataType)};";
+
+            Console.WriteLine(sql);
+
+            await ExecuteSqlAsync(sql);
+        }
     }
-    
-    public async Task AddTable(AddTableRequest request){
+
+    public async Task AddTable(AddTableRequest request)
+    {
         var sql = "CREATE TABLE " + request.TableName + $"({request.TableName}Id INT PRIMARY KEY AUTO_INCREMENT);";
         await ExecuteSqlAsync(sql);
     }
 
-    public async Task DeleteTable(string tableName){
+    public async Task DeleteTable(string tableName)
+    {
         var sql = "DROP TABLE " + tableName;
-        await ExecuteSqlAsync(sql); 
+        await ExecuteSqlAsync(sql);
     }
 
-    public async Task<bool> TableExists(string tableName){
+    public async Task<bool> TableExists(string tableName)
+    {
         var tableNames = await GetTableNamesAsync();
         return tableNames.Any(x => x == tableName);
+    }
+
+    public async Task<bool> ColumnExists(string tableName, string columnName)
+    {
+        var table = await GetTableAsync(tableName);
+        return table.Columns.Any(c => c.ColumnName == columnName);
     }
 
     private string DefaultValue(TableDataType type) => type switch
     {
         TableDataType.INT => "42",
         TableDataType.BIGINT => "42",
-        TableDataType.NVARCHAR => "'default'",
         TableDataType.VARCHAR => "'default'",
-        TableDataType.LONGTEXT => "'something'",
         TableDataType.CHAR => "'d'",
+        TableDataType.DECIMAL => "'42'",
         TableDataType.DATETIME => "'1900-01-01'",
         TableDataType.DATE => "'1900-01-01'",
         _ => "'something'"

@@ -69,7 +69,7 @@
                 }
             </tbody>
         </table>
-        <a asp-action="AddColumn" asp-route-tableName="@table.TableName">Додати поле до таблиці @table.TableName</a>
-        <a asp-action="DeleteTable" asp-route-tableName="@table.TableName">Видалити таблицю @table.TableName</a>
+        <a asp-action="AddColumn" asp-route-tableName="@table.TableName">Додати поле до таблиці @table.TableName</a><br/>
+        <a asp-action="DeleteTable" asp-route-tableName="@table.TableName" class="text-danger">Видалити таблицю @table.TableName</a>
     }
 </ul>

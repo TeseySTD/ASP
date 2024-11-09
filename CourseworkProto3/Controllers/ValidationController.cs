@@ -69,5 +69,9 @@ namespace Library.Controllers
             var tables = await _tableService.GetTableNamesAsync();
             return tables.Any(t => t == tableName) ? Json(false) : Json(true);
         }
+
+        public async Task<IActionResult> ValidateUniqueColumnName(string tableName, string columnName){
+            return await _tableService.ColumnExists(tableName, columnName) ? Json(false) : Json(true);
+        }
     }
 }

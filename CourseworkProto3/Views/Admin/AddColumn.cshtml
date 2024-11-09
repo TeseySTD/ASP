@@ -3,16 +3,15 @@
 @model TableColumnDTO
 @{
     ViewData["Title"] = "Адміністрування таблиць";
-    string tableName = ViewBag.TableName;
 }
 
 <div class="text-center">
     <h2>Адміністрування таблиць</h2>
-    <h3>Додати нове поле в @tableName</h3>
+    <h3>Додати нове поле в @Model.TableName</h3>
 </div>
 
 <form id="addColumnForm" asp-action="AddColumn" method="post">
-    <input type="hidden" name="tableName" value="@tableName" />
+    <input type="hidden" asp-for="@Model.TableName" />
     <div class="form-group">
         <label>Назва поля</label>
         <input form="addColumnForm" type="text"asp-for="@Model.ColumnName" class="form-control"
