@@ -1,0 +1,38 @@
+@using Library.Models.DTO
+@using Library.Models.Entities
+@model TableColumnDTO
+@{
+    ViewData["Title"] = "Адміністрування таблиць";
+    string tableName = ViewBag.TableName;
+}
+
+<div class="text-center">
+    <h2>Адміністрування таблиць</h2>
+    <h3>Додати нове поле в @tableName</h3>
+</div>
+
+<form id="addColumnForm" asp-action="AddColumn" method="post">
+    <input type="hidden" name="tableName" value="@tableName" />
+    <div class="form-group">
+        <label>Назва поля</label>
+        <input form="addColumnForm" type="text"asp-for="@Model.ColumnName" class="form-control"
+            required />
+        <span asp-validation-for="@Model.ColumnName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Тип даних</label>
+        <select form="addColumnForm" asp-for="@Model.DataType" class="form-control">
+            @foreach (var format in Enum.GetValues(typeof(TableDataType)))
+            {
+                <option value="@format">@format</option>
+            }
+        </select>
+        <span asp-validation-for="@Model.DataType" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Чи може поле бути пустим</label>
+        <input form="addColumnForm" asp-for="@Model.IsNullable" type="checkbox"  />
+        <span asp-validation-for="@Model.IsNullable" class="text-danger"></span>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Додати поле" />
+</form>

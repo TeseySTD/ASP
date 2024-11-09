@@ -199,7 +199,6 @@ public class ProductRepository
             ProductType = ProductType.Book, 
             OwnerId = (int)dto.OwnerId
         };
-        
         var book = new Book
         {
             Author = dto.Book.Author,

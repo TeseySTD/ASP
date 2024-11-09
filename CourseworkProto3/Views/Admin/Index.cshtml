@@ -1,0 +1,75 @@
+@using Library.Models.DTO
+@using Library.Models.Entities
+@model List<TableDTO>
+@{
+    ViewData["Title"] = "Адміністрування таблиць";
+}
+
+<div class="text-center">
+    <h2>Адміністрування таблиць</h2>
+    <h3>Перелік таблиць</h3>
+    <a asp-action="AddTable" class="btn btn-primary">Додати таблицю</a>
+</div>
+
+<ul>
+    @foreach (var table in Model)
+    {
+        <h3>Поля таблиці @table.TableName</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Назва</th>
+                    <th>Тип даних</th>
+                    <th>Обов'язковість</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var column in table.Columns)
+                {
+                    <tr>
+                        <form id=editColumnForm_@table.TableName@column.ColumnName asp-action="EditColumn" method="post">
+                            <td class="col-2">
+                                @column.ColumnName
+                                <input type="hidden" asp-for="@column.ColumnName" form="editColumnForm_@table.TableName@column.ColumnName" />
+                                <input type="hidden" value="@table.TableName" form="editColumnForm_@table.TableName@column.ColumnName" name="tableName" />
+                            </td>
+                            <td class="col-3">
+                                <select asp-for="@column.DataType" form="editColumnForm_@table.TableName@column.ColumnName"
+                                    class="form-control">
+                                    @foreach (var format in Enum.GetValues(typeof(TableDataType)))
+                                    {
+                                        <option value="@format">@format</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="@column.DataType" class="text-danger"></span>
+                            </td>
+                            <td class="col-4">
+                                <select form="editColumnForm_@table.TableName@column.ColumnName" asp-for="@column.IsNullable"
+                                    class="form-control">
+                                    <option value="true">Так</option>
+                                    <option value="false">Ні</option>
+                                </select>
+                                <span asp-validation-for="@column.IsNullable" class="text-danger"></span>
+                            </td>
+                        </form>
+
+                        <td class="col-3">
+                            <!-- Delete column button -->
+                            <form asp-action="DeleteColumn" method="post" style="display:inline;">
+                                <input type="hidden" value="@table.TableName" name="tableName" />
+                                <input type="hidden" value="@column.ColumnName" name="columnName" />
+                                <input type="submit" class="btn btn-danger" value="Видалити" />
+                            </form>
+                            <!-- Edit column button -->
+                            <input type="submit" class="btn btn-primary" value="Редагувати" form="editColumnForm_@table.TableName@column.ColumnName" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <a asp-action="AddColumn" asp-route-tableName="@table.TableName">Додати поле до таблиці @table.TableName</a>
+        <a asp-action="DeleteTable" asp-route-tableName="@table.TableName">Видалити таблицю @table.TableName</a>
+    }
+</ul>

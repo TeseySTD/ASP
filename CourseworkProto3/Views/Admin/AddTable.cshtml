@@ -1,0 +1,26 @@
+@using Library.Models.DTO
+@using Library.Models.Entities
+@model AddTableRequest
+@{
+    ViewData["Title"] = "Адміністрування таблиць";
+}
+
+<div class="text-center">
+    <h2>Адміністрування таблиць</h2>
+    <h3>Додати нову таблицю</h3>
+</div>
+
+<form id="addTableForm" asp-action="AddTable" method="post">
+    <div class="form-group">
+        <label>Назва таблиці</label>
+        <input form="addTableForm" type="text"asp-for="@Model.TableName" class="form-control"
+            required />
+        <span asp-validation-for="@Model.TableName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Ім'я первинного ключа</label>
+        <input form="addTableForm" type="text"asp-for="@Model.PrimaryKeyName" class="form-control" required/>
+        <span asp-validation-for="@Model.PrimaryKeyName" class="text-danger"></span>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Додати таблицю" />
+</form>

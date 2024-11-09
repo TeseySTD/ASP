@@ -14,13 +14,17 @@ namespace Library.Controllers
         private readonly ProductService _productService;
         private readonly UserRepository _userRepository;
 
+        private readonly TableService _tableService;
+
         public CatalogController(ProductRepository productRepository
                                 , ProductService productService
-                                , UserRepository userRepository)
+                                , UserRepository userRepository
+                                , TableService tableService)
         {
             _productRepository = productRepository;
             _productService = productService;
             _userRepository = userRepository;
+            _tableService = tableService;
         }
 
         // GET: Catalog

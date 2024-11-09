@@ -49,4 +49,16 @@ namespace Library.Models.Entities
         Ordered,     // Замовлено
         Returned,    // Виконано,
     }
+
+    public enum TableDataType{
+        DATETIME = 1,
+        VARCHAR,
+        CHAR,
+        LONGTEXT,
+        DECIMAL,
+        NVARCHAR,
+        INT,
+        BIGINT,
+        DATE
+    }
 }

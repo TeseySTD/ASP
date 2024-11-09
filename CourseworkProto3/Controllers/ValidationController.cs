@@ -7,10 +7,12 @@ namespace Library.Controllers
     public class ValidationController : Controller
     {
         private readonly UserRepository _userRepository;
+        private readonly TableService _tableService;
 
-        public ValidationController(UserRepository userRepository)
+        public ValidationController(UserRepository userRepository, TableService tableService)
         {
             _userRepository = userRepository;
+            _tableService = tableService;
         }
 
         // GET: Validation
@@ -63,5 +65,9 @@ namespace Library.Controllers
             }
         }
 
+        public async Task<IActionResult> ValidateUniqueTableName(string tableName){
+            var tables = await _tableService.GetTableNamesAsync();
+            return tables.Any(t => t == tableName) ? Json(false) : Json(true);
+        }
     }
 }

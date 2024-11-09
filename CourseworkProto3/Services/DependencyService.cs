@@ -16,6 +16,7 @@ namespace Library.Services
             services.AddScoped<ProductService>();
             services.AddScoped<OrderService>();
             services.AddScoped<ExternalSourceService>();
+            services.AddScoped<TableService>();
             
             services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
         } 
