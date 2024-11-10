@@ -41,7 +41,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization(options => {
     options.AddPolicy("Owner", policy => policy.AddRequirements(
         new PermissionRequirement(Permission.Create, Permission.Read, Permission.Update, Permission.Delete)));
-    options.AddPolicy("Administrator", policy => policy.AddRequirements(new PermissionRequirement( Permission.Delete)));
+    options.AddPolicy("Administrator", policy => policy.AddRequirements(new PermissionRequirement( Permission.Create)));
 });
 DependencyService.InjectDependencies(builder.Services);
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Library.Models.Entities;
 using Library.Data.Repo;
+using Library.Models.DTO;
 
 namespace Library.Services
 {
@@ -14,15 +15,15 @@ namespace Library.Services
             _userRepository = userRepository;
         }
 
-        public async Task<User> Register(string login, string email, string password, Gender gender)
+        public async Task<User> Register(RegisterUserRequest request)
         {
             var user = new User
             {
-                Login = login,
-                Email = email,
-                Password = password,
-                Role = /*(AccessRights)Enum.Parse(typeof(AccessRights), accessRights)*/ Roles.Default,
-                Gender = gender
+                Login = request.Login,
+                Email = request.Email,
+                Password = request.Password,
+                Role = request.Role,
+                Gender = request.Gender
             };
             await _userRepository.AddUser(user);
             return user;
@@ -35,6 +36,7 @@ namespace Library.Services
                 throw new Exception("Wrong email or password");
             return JwtService.GenerateToken(user);
         }
+        
         
         public bool IsSignedIn(string token){
             var user = _userRepository.GetUserByToken(token);

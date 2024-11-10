@@ -1,0 +1,67 @@
+@using Library.Models.DTO
+@using Library.Models.Entities
+@model EditUserRequest
+@{
+    ViewData["Title"] = "Адміністрування таблиць";
+}
+
+<div class="text-center">
+    <h2>Засоби адміністрування</h2>
+    <h3>Редагувати користувача @Model.Login (@Model.Email)</h3>
+</div>
+<a asp-action="Users" class="btn btn-primary">Повренутись назад</a>
+
+<div class="container mt-2">
+    <div class="row justify-content-center">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form id=editUserForm asp-action="EditUser" method="post">
+                        <input type="hidden" asp-for="@Model.UserId" form="editUserForm" />
+
+                        <div class="form-group">
+                            <label asp-for=@Model.Login class="control-label">Логін</label>
+                            <input type="text" asp-for="@Model.Login" form="editUserForm"
+                                class="form-control" />
+                            <span asp-validation-for="@Model.Login" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for=@Model.Email class="control-label">Емейл</label>
+                            <input type="text" asp-for="@Model.Email" form="editUserForm"
+                                class="form-control" />
+                            <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for=@Model.Password class="control-label">Пароль</label>
+                            <input type="text" asp-for="@Model.Password" form="editUserForm"
+                                class="form-control" />
+                            <span asp-validation-for="@Model.Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="@Model.Role" class="control-label">Роль</label>
+                            <select asp-for="@Model.Role" form="editUserForm" class="form-control" disabled="@(Model.Role == Roles.Owner)">
+                                <option value="Owner" hidden="@(Model.Role != Roles.Owner)">Власник</option>
+                                <option value="Administrator">Адміністратор</option>
+                                <option value="Operator">Оператор</option>
+                                <option value="Default">Гість</option>
+                            </select>
+                            <span asp-validation-for="@Model.Role" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="@Model.Gender" class="control-label">Стать</label>
+                            <select asp-for="@Model.Gender" form="editUserForm" class="form-control">
+                                <option value="Male">Чоловік</option>
+                                <option value="Female">Жінка</option>
+                            </select>
+                            <span asp-validation-for="@Model.Gender" class="text-danger"></span>
+                        </div>
+                        <input type="submit" class="btn btn-primary" value="Редагувати" form="editUserForm"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

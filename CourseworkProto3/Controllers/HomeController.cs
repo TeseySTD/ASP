@@ -42,7 +42,7 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> Register(RegisterUserRequest request)
     {
-        await _userService.Register(request.Login, request.Email, request.Password, request.Gender);
+        await _userService.Register(request);
         return RedirectToAction("Index");
     }
     

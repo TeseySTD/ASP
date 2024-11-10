@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Library.Data;
+using Library.Models.DTO;
 using Library.Models.Entities;
 using Library.Services;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,15 @@ namespace Library.Data.Repo
             return user;
         }
 
-        public async Task<User?> GetUserByEmail(string email){
+        public async Task<List<User>> GetAllUsers()
+        {
+            return await _context.Users
+                            .AsNoTracking()
+                            .ToListAsync();
+        }
+
+        public async Task<User?> GetUserByEmail(string email)
+        {
             return await _context.Users
                             .AsNoTracking()
                             .FirstOrDefaultAsync(u => u.Email == email);
@@ -42,7 +51,32 @@ namespace Library.Data.Repo
             await _context.SaveChangesAsync();
         }
 
-        public async Task<User?> GetUserByIdAsync(int id){
+        public async Task UpdateUser(EditUserRequest request)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.UserId == request.UserId);
+            if (user != null)
+            {
+                user.Login = request.Login;
+                user.Password = request.Password;
+                user.Email = request.Email;
+                user.Role = request.Role;
+                user.Gender = request.Gender;
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteUser(int id)    
+        {
+            var user = _context.Users.FirstOrDefault(x => x.UserId == id);
+            if (user != null)
+            {
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<User?> GetUserByIdAsync(int id)
+        {
             return await _context.Users
                             .AsNoTracking()
                             .FirstOrDefaultAsync(u => u.UserId == id);
@@ -54,7 +88,8 @@ namespace Library.Data.Repo
             return RolePermissions.Permissions[user.Role];
         }
 
-        public User GetUserByToken(string token){
+        public User GetUserByToken(string token)
+        {
             var id = JwtService.GetUserIdFromToken(token);
             var user = _context.Users
                             .AsNoTracking()
@@ -62,16 +97,24 @@ namespace Library.Data.Repo
             return user;
         }
 
-        public User GetOwnerOfLibrary(){
+        public User GetOwnerOfLibrary()
+        {
             return _context.Users.FirstOrDefault(u => u.Role == Roles.Owner);
         }
 
-        public bool IsLoginTaken(string login){
+        public bool IsLoginTaken(string login)
+        {
             return _context.Users.Any(u => u.Login == login);
         }
 
-        public bool IsEmailTaken(string email){
+        public bool IsEmailTaken(string email)
+        {
             return _context.Users.Any(u => u.Email == email);
+        }
+
+        public Task<bool> IsEmailTakenExceptUser(string email, int userId)
+        {
+            return _context.Users.AnyAsync(u => u.Email == email && u.UserId != userId);
         }
 
         public bool IsPasswordCorrect(string email, string password)
@@ -80,7 +123,8 @@ namespace Library.Data.Repo
             return user != null;
         }
 
-        public bool IsUser(int id){
+        public bool IsUser(int id)
+        {
             return _context.Users.Any(u => u.UserId == id);
         }
     }

@@ -1,5 +1,6 @@
 @using Library.Data.Repo
 @using Library.Models.DTO
+@using Library.Models.Entities
 @using Library.Services
 
 @inject UserRepository userRepository;
@@ -9,9 +10,11 @@
         var user = userRepository.GetUserByToken(Context.Request.Cookies["access-cookie"]);
         if (user != null)
         {
-            <li class="nav-item">
-                <button class="btn btn-outline-dark me-2" data-bs-toggle="modal" data-bs-target="#registerModal" id="register">Додати користувача</button>
-            </li>
+            if(user.Role <= Roles.Administrator){
+                <li class="nav-item">
+                    <button class="btn btn-outline-dark me-2" data-bs-toggle="modal" data-bs-target="#registerModal" id="register">Додати користувача</button>
+                </li>
+            }
             <li class="nav-item">
                 <a id="manage" class="nav-link text-dark"  title="Manage">Користувач: @user.Login</a>
             </li>

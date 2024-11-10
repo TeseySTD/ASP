@@ -5,8 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Models.DTO;
 
-public class RegisterUserRequest
+public class EditUserRequest
 {
+    [Required(ErrorMessage = "Id не може бути порожнім.")]
+    public int UserId { get; set; }
+
     [Required(ErrorMessage = "Логін не може бути порожнім.")]
     [StringLength(50, ErrorMessage = "Логін не може бути довше ніж 50 символів.")]
     public string Login { get; set; } = null!;
@@ -14,7 +17,7 @@ public class RegisterUserRequest
     [Required(ErrorMessage = "Введіть електронну пошту.")]
     [StringLength(50, ErrorMessage = "Пошта не може бути довшою за 50 символів.")]
     [EmailAddress(ErrorMessage = "Некоректно введена пошта.")]
-    [Remote(action: "ValidateEmail", controller: "Validation", ErrorMessage = "Пошта вже використовується.")]
+    [Remote(action: "ValidateUniqueEmailExceptUser", controller: "Validation", AdditionalFields = nameof(UserId), ErrorMessage = "Пошта вже використовується.")]
     public string Email { get; set; } = null!;
 
     [Required(ErrorMessage = "Пароль не може бути порожнім.")]

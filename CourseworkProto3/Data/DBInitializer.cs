@@ -81,7 +81,7 @@ public static class DBInitializer
                     new User { UserId = 1, Login = "root", Email = "root@gmail.com", Password = "pass", Gender = Gender.Male, Role = Roles.Owner },
                     new User { UserId = 2, Login = "Jane Smith", Email = "jane@gmail.com", Password = "pass", Gender = Gender.Female, Role = Roles.Administrator },
                     new User { UserId = 3, Login = "John Doe", Email = "john@gmail.com", Password = "pass", Gender = Gender.Male, Role = Roles.Operator },
-                    new User { UserId = 4, Login = "Jane Doe", Email = "jane@gmail.com", Password = "pass", Gender = Gender.Female, Role = Roles.Default }
+                    new User { UserId = 4, Login = "Jane Doe", Email = "jane2@gmail.com", Password = "pass", Gender = Gender.Female, Role = Roles.Default }
                 };
                 context.Users.AddRange(users);
                 context.SaveChanges();

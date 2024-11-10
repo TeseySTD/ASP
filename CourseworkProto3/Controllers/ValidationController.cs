@@ -22,19 +22,22 @@ namespace Library.Controllers
         }
 
         [AcceptVerbs("Get", "Post")]
-        public IActionResult ValidateEmail(string email){
-            if(_userRepository.IsEmailTaken(email)){
+        public IActionResult ValidateEmail(string email)
+        {
+            if (_userRepository.IsEmailTaken(email))
+            {
                 return Json(false);
             }
             return Json(true);
         }
 
         [AcceptVerbs("Get", "Post")]
-        public IActionResult IsEmailAvailableForCurrentUser(string email){
+        public IActionResult IsEmailAvailableForCurrentUser(string email)
+        {
             var token = HttpContext.Request.Cookies["access-cookie"];
-            if(!_userRepository.IsEmailTaken(email))
+            if (!_userRepository.IsEmailTaken(email))
                 return Json("Такої пошти не існує в бібліотеці.");
-            else if(_userRepository.GetUserByToken(token).Email == email)
+            else if (_userRepository.GetUserByToken(token).Email == email)
                 return Json("Ви не можете використовувати вашу пошту.");
             else
                 return Json(true);
@@ -53,8 +56,9 @@ namespace Library.Controllers
                 return Json($"Невірний пароль для {email}.");
             }
         }
-        [AcceptVerbs("Get", "Post")]    
-        public IActionResult ValidateEndDate(DateTime BorrowEndDate){
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult ValidateEndDate(DateTime BorrowEndDate)
+        {
             if (BorrowEndDate > DateTime.Now)
             {
                 return Json(true);
@@ -65,13 +69,25 @@ namespace Library.Controllers
             }
         }
 
-        public async Task<IActionResult> ValidateUniqueTableName(string tableName){
+        public async Task<IActionResult> ValidateUniqueTableName(string tableName)
+        {
             var tables = await _tableService.GetTableNamesAsync();
             return tables.Any(t => t == tableName) ? Json(false) : Json(true);
         }
 
-        public async Task<IActionResult> ValidateUniqueColumnName(string tableName, string columnName){
+        public async Task<IActionResult> ValidateUniqueColumnName(string tableName, string columnName)
+        {
             return await _tableService.ColumnExists(tableName, columnName) ? Json(false) : Json(true);
+        }
+
+        public async Task<IActionResult> ValidateUniqueEmailExceptUser(string email, int userId)
+        {
+            if (await _userRepository.IsEmailTakenExceptUser(email, userId))
+            {
+                return Json(false);
+            }
+            else
+                return Json(true);
         }
     }
 }

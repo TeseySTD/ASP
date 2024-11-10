@@ -1,40 +1,63 @@
+@using Library.Data.Repo
+@using Library.Models.Entities
+@inject UserRepository _userRepository
 @model Library.Models.DTO.RegisterUserRequest
+
+@{
+    var currentUser = _userRepository.GetUserByToken(Context.Request.Cookies["access-cookie"]);
+}
 <!-- Modal -->
 <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true" novalidate>
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                <h5 class="modal-title" id="registerModalLabel">Додати користувача</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form asp-controller="Home" asp-action="Register" class="needs-validation" novalidate>
+                <form asp-controller="Home" asp-action="Register" class="needs-validation" id="registerUserForm" novalidate>
                     <div class="mb-3">
-                        <label class="form-label" asp-for="Login"></label>
-                        <input class="form-control" asp-for="Login" />
+                        <label class="form-label" asp-for="Login">Логін</label>
+                        <input class="form-control" asp-for="Login" form="registerUserForm" />
                         <span asp-validation-for="Login" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" asp-for="Email"></label>
-                        <input class="form-control" asp-for="Email" />
+                        <label class="form-label" asp-for="Email">Пошта</label>
+                        <input class="form-control" asp-for="Email" form="registerUserForm"/>
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" asp-for="Password"></label>
-                        <input class="form-control" asp-for="Password" type="password" />
+                        <label class="form-label" asp-for="Password">Пароль</label>
+                        <input class="form-control" asp-for="Password" type="password" form="registerUserForm"/>
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
+
+                    <div class="form-group">
+                        <label asp-for="@Model.Role" class="control-label">Роль</label>
+                        <select asp-for="@Model.Role" class="form-control" form="registerUserForm">
+                            @if(currentUser != null){
+                                if(currentUser.Role == Roles.Owner){
+                                    <option value="Administrator">Адміністратор</option>
+                                }
+                                if(currentUser.Role <= Roles.Administrator){
+                                    <option value="Operator">Оператор</option>
+                                    <option value="Default">Гість</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="@Model.Role" class="text-danger"></span>
+                    </div>
+
                     <div class="mb-3">
-                        <label class="form-label" asp-for="Gender"></label>
-                        <select class="form-select" asp-for="Gender">
-                            <option value="">Обрати стать</option>
+                        <label class="form-label" asp-for="Gender">Стать</label>
+                        <select class="form-select" asp-for="Gender" form="registerUserForm">
                             <option value="Male">Чоловік</option>
                             <option value="Female">Жінка</option>
                         </select>
                         <span asp-validation-for="Gender" class="text-danger"></span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button type="submit" class="btn btn-primary" form="registerUserForm">Додати користувача</button>
                 </form>
             </div>
         </div>

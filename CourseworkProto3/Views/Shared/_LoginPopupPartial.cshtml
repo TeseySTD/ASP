@@ -4,24 +4,24 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                <h5 class="modal-title" id="loginModalLabel">Вхід</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form asp-controller="Home" asp-action="Login" class="needs-validation" novalidate>
+                <form asp-controller="Home" asp-action="Login" class="needs-validation" id="loginUserForm" novalidate>
                     <div class="mb-3">
-                        <label class="form-label" asp-for="Email"></label>
-                        <input class="form-control" asp-for="Email" />
+                        <label class="form-label" asp-for="Email">Пошта</label>
+                        <input class="form-control" asp-for="Email" form="loginUserForm"/>
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label" asp-for="Password"></label>
-                        <input class="form-control" asp-for="Password" type="password" />
+                        <label class="form-label" asp-for="Password">Пароль</label>
+                        <input class="form-control" asp-for="Password" type="password" form="loginUserForm"/>
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="submit" class="btn btn-primary" form="loginUserForm">Ввійти</button>
                 </form>
             </div>
         </div>
