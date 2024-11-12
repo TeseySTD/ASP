@@ -1,0 +1,103 @@
+@using Library.Models.Entities
+@using Library.Models.DTO.InfoResponses
+
+@model FourthInfoResponse
+@{
+    ViewData["Title"] = "Інформаційні запити";
+}
+
+@if (Model.NotOwe.Count == 0 && Model.Owe.Count == 0)
+{
+    <h3>Немає результатів</h3>
+}
+else{
+    if(Model.NotOwe.Count == 0){
+        <h3>Немає знайомих, яким ви нічого не заборгували</h3>
+    }
+    else{
+        <h3>Перелік всіх знайомих, яким ви нічого не заборгували</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Логін</th>
+                    <th>Емейл</th>
+                    <th>Стать</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var user in Model.NotOwe)
+                {
+
+                    <tr>
+                        <td>
+                            @user.UserId
+                        </td>
+                        <td>
+                            @user.Login
+                        </td>
+                        <td>
+                            @user.Email
+                        </td>
+                        <td>
+                            @switch(user.Gender){
+                                case Gender.Male:
+                                    <span>Чоловік</span>
+                                    break;
+                                case Gender.Female:
+                                    <span>Жінка</span>
+                                    break;
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    if(Model.Owe.Count == 0){
+        <h3>Немає знайомих, в яких ви щось брали.</h3>
+    }
+    else{
+        <h3>Перелік всіх знайомих, в яких ви щось брали</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Логін</th>
+                    <th>Емейл</th>
+                    <th>Стать</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Owe)
+                {
+                    <tr>
+                        <td>
+                            @user.UserId
+                        </td>
+                        <td>
+                            @user.Login
+                        </td>
+                        <td>
+                            @user.Email
+                        </td>
+                        <td>
+                            @switch(user.Gender){
+                                case Gender.Male:
+                                    <span>Чоловік</span>
+                                    break;
+                                case Gender.Female:
+                                    <span>Жінка</span>
+                                    break;
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+

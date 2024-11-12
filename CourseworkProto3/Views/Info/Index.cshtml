@@ -1,0 +1,186 @@
+@using Library.Models.DTO
+@using Library.Models.Entities
+@using Library.Services
+
+@{
+    ViewData["Title"] = "Інформаційні запити";
+    var currentUserId = JwtService.GetUserIdFromToken(Context.Request.Cookies["access-cookie"]);
+}
+
+<div class="container mt-4">
+    <div class="row text-center">
+        <div class="col">
+            <h2>Інформаційні запити</h2>
+            <p class="text-muted">Доступ до інформаційних запитів</p>
+        </div>
+    </div>
+
+    <div class="row flex-column">
+        <!-- Запит 1: Перелік знайомих з продукцією та перший знайомий, хто має повернути продукцію -->
+        <div class="card mb-4 shadow-sm w-50 mx-auto">
+            <div class="card-header bg-secondary text-white mt-2">
+                Перелік знайомих, у яких на руках деяка продукція й знайомого, що раніше всіх її повинен повернути.
+            </div>
+            <div class="card-body">
+                <a asp-action="First" asp-controller="Info" class="btn btn-primary">Показати перелік</a>
+            </div>
+        </div>
+        <!-- Запит 2: Список боржників із терміном боргу більше 10 днів, по статевій ознаці -->
+        <div class="card mb-4 shadow-sm w-50 mx-auto">
+            <div class="card-header bg-secondary text-white mt-2">
+                Cписок і загальне число всіх знайомих-боржників, боржників із терміном більше 10 днів, по статевій ознаці.
+            </div>
+            <div class="card-body">
+                <form method="post" id="secondForm" asp-action="Second">
+                    <div class="form-group">
+                        <label >Оберіть тип запиту:</label>
+                        <select class="form-control" form="secondForm" name="type">
+                            <option value="всі">Всі</option>
+                            <option value="10 днів">Більше 10 днів</option>
+                            <option value="Гендерна ознака">По статевій ознаці</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label >Оберіть стать:</label>
+                        <select class="form-control" form="secondForm" name="gender">
+                            <option value="1">Чоловік</option>
+                            <option value="2">Жінка</option>
+                        </select>
+                    </div>
+                    <input type="submit" form="secondForm" class="btn btn-primary mt-2" value="Показати перелік" />
+                </form>
+            </div>
+        </div>
+
+        <!-- Запит 3: Загальна кількість дисків за жанрами та типами, які знаходяться на даний момент у вас дома -->
+        <div class="card mb-4 shadow-sm w-50 mx-auto">
+            <div class="card-header bg-secondary text-white mt-2">
+                Загальна кількість дисків за жанрами та типами, які знаходяться на даний момент у вас дома.
+            </div>
+            <div class="card-body">
+                <form method="post" id="thirdForm" asp-action="Third">
+                    <div class="form-group">
+                        <label >Оберіть тип диску:</label>
+                        <select class="form-control" form="thirdForm" name="type">
+                            <option value="">Всі</option>
+                            <option value="1">Фільм</option>
+                            <option value="2">Музика</option>
+                            <option value="3">Гра</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label >Введіть жанр:</label>
+                        <input type="text" form="thirdForm" class="form-control" name="genre" />
+                    </div>
+                    <input type="submit" form="thirdForm" class="btn btn-primary mt-2" value="Показати результат" />
+                </form>
+            </div>
+        </div>
+        <!-- Запит 4: Перелік інформації про знайомих, яким ви нічого не заборгували та перелік знайомих чиї речі знаходяться у вас -->
+        <div class="card mb-4 shadow-sm w-50 mx-auto">
+            <div class="card-header bg-secondary text-white mt-2">
+                Перелік інформації про знайомих, яким ви нічого не заборгували та перелік знайомих чиї речі знаходяться у вас.
+            </div>
+            <div class="card-body">
+                <a asp-action="Fourth" asp-controller="Info" class="btn btn-primary">Показати перелік</a>
+            </div>
+        </div>
+        <!-- Запит 5: Перелік інформації про всі види друкованої та недрукованої продукції; за відповідним жанром; за відповідним форматом; про вказану продукцію. -->
+        <div class="card mb-4 shadow-sm w-50 mx-auto">
+            <div class="card-header bg-secondary text-white mt-2">
+                Перелік інформації про всі види друкованої та недрукованої продукції; за відповідним жанром; за відповідним форматом; про вказану продукцію.
+            </div>
+            <div class="card-body">
+                <form method="post" id="fifthForm" asp-action="Fifth">
+                    <div class="form-group">
+                        <label >Оберіть тип продутку:</label>
+                        <select class="form-control" form="fifthForm" name="productType">
+                            <option value="">Всі</option>
+                            <option value="1">Книга</option>
+                            <option value="2">Диск</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label >Введіть жанр:</label>
+                        <input type="text" form="fifthForm" class="form-control" name="genre" />
+                    </div>
+                    <div class="form-group">
+                        <label >Оберіть формат диску(якщо ви обрали диск):</label>
+                        <select class="form-control" form="fifthForm" name="format">
+                            <option value="">Всі</option>
+                            <option value="1">CD</option>
+                            <option value="2">DVD</option>
+                            <option value="3">Blu-ray</option>
+                        </select>
+                    </div>
+                    <input type="submit" form="fifthForm" class="btn btn-primary mt-2" value="Показати результат" />
+                </form>
+            </div>
+        </div>
+        <!-- Запит 6: Перелік жанрів фільмів, всі диски яких на даний момент знаходяться у вас (нікому не позичені). -->
+        <div class="card mb-4 shadow-sm w-50 mx-auto">
+            <div class="card-header bg-secondary text-white mt-2">
+                Перелік жанрів фільмів, всі диски яких на даний момент знаходяться у вас (нікому не позичені).
+            </div>
+            <div class="card-body">
+                <a asp-action="Sixth" asp-controller="Info" class="btn btn-primary">Показати перелік</a>
+            </div>
+        </div>
+        <!-- Запит 7: Переглянути інформацію про заданого знайомого; про всіх знайомих, які брали у вас книжки і ще не повернули. -->
+        <div class="card mb-4 shadow-sm w-50 mx-auto">
+            <div class="card-header bg-secondary text-white mt-2">
+                Переглянути інформацію про заданого знайомого; про всіх знайомих, які брали у вас книжки і ще не повернули.
+            </div>
+            <div class="card-body">
+                <div class="mb-2 border p-2">
+                    <form id="seventhForm" asp-action="Seventh"  >
+                        <div class="form-group">
+                            <label >Введіть пошту користувача:</label>
+                            <input type="text" form="seventhForm" class="form-control" name="email" />
+                        </div>
+                        <input type="submit" form="seventhForm" class="btn btn-primary mt-2" value="Показати результат" />
+                    </form>
+                </div>
+                <div class="border mb-2 p-2">
+                    <a asp-action="Seventh" asp-controller="Info" class="btn btn-primary">Показати перелік знайомих, які брали у вас книжки і ще не повернули</a>
+                </div>
+            </div>
+        </div>
+        <!-- Запит 8: Продукція, яка була замовлення користувачами бібліотеки; Чистий прибуток від надання в обмін продукції на замовлення за останній місяць. -->
+        <div class="card mb-4 shadow-sm w-50 mx-auto">
+            <div class="card-header bg-secondary text-white mt-2">
+                Продукція, яка була замовлення користувачами бібліотеки; Чистий прибуток від надання в обмін продукції на замовлення за останній місяць.
+            </div>
+            <div class="card-body">
+                <a asp-action="Eighth" asp-controller="Info" class="btn btn-primary">Показати перелік</a>
+            </div>
+        </div>
+        <!-- Запит 9: Продукція, яка поповнила ваш каталог продукції за останній тиждень; за місяць. -->
+        <div class="card mb-4 shadow-sm w-50 mx-auto">
+            <div class="card-header bg-secondary text-white mt-2">
+                Продукція, яка поповнила ваш каталог продукції за останній тиждень; за місяць.
+            </div>
+            <div class="card-body">
+                <form id="ninthForm" asp-action="Ninth"  >
+                    <div class="form-group">
+                        <label >Оберіть проміжок часу:</label>
+                        <select class="form-control" form="ninthForm" name="period">
+                            <option value="week">Останній тиждень</option>
+                            <option value="month">Останній місяць</option>
+                        </select>
+                    </div>
+                    <input type="submit" form="ninthForm" class="btn btn-primary mt-2" value="Показати результат" />
+                </form>
+            </div>
+        </div>
+        <!-- Запит 10: Інформація про всі диски і книги, які ви взяли в борг, і їх термін повернення вже минув. -->
+        <div class="card mb-4 shadow-sm w-50 mx-auto">
+            <div class="card-header bg-secondary text-white mt-2">
+                Інформація про всі диски і книги, які ви взяли в борг, і їх термін повернення вже минув.
+            </div>
+            <div class="card-body">
+                <a asp-action="Tenth" asp-controller="Info" class="btn btn-primary">Показати інформацію</a>
+            </div>
+        </div>
+    </div>
+</div>

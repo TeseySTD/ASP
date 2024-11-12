@@ -132,7 +132,28 @@ public class ProductRepository
             .ToListAsync();
     }
 
+    public async Task<List<Disc>> GetDiscs(){
+        return await _context.Discs
+                            .Include(d => d.Product)
+                                .ThenInclude(p => p.Owner)
+                            .Include(d => d.Movie)
+                                .ThenInclude(m => m.Genre)
+                            .Include(d => d.Music)
+                                .ThenInclude(m => m.Genre)
+                            .Include(d => d.Game)
+                                .ThenInclude(g => g.Genre)
+                            .AsNoTracking()
+                            .ToListAsync();
+    }
 
+    public async Task<List<MovieGenre>> GetMovieGenres(){
+        return await _context.MovieGenres
+                            .Include(d => d.Movies)
+                                .ThenInclude(m => m.Disc)
+                                    .ThenInclude(d => d.Product) 
+                            .AsNoTracking()
+                            .ToListAsync();
+    }
 
     public async Task Update(Product product){
         _context.Products.Update(product);

@@ -1,15 +1,7 @@
-@using Library.Models.DTO
 @using Library.Models.Entities
-@model List<EditUserRequest>
 @{
-    ViewData["Title"] = "Адміністрування таблиць";
+    ViewData["Title"] = "Інформаційні запити";
 }
-
-<div class="text-center">
-    <h2>Засоби адміністрування</h2>
-    <h3>Перелік корстувачів</h3>
-</div>
-<a asp-action="Index" class="btn btn-primary mb-2">Повренутись назад</a>
 
 <table class="table table-bordered">
     <thead>
@@ -17,10 +9,8 @@
             <th>#</th>
             <th>Логін</th>
             <th>Емейл</th>
-            <th>Пароль</th>
             <th>Роль</th>
             <th>Стать</th>
-            <th>Дії</th>
         </tr>
     </thead>
 
@@ -36,9 +26,6 @@
                 </td>
                 <td>
                     @user.Email
-                </td>
-                <td>
-                    @user.Password
                 </td>
                 <td>
                     @switch(user.Role){
@@ -67,16 +54,10 @@
                     }
                 </td>
 
-                <td class="col-3">
-                    <!-- Delete user button -->
-                    <form asp-action="DeleteUser" method="post" style="display:inline;" id="deleteUserForm_@user.UserId">
-                        <input type="hidden" name="userId" value="@user.UserId" form="deleteUserForm_@user.UserId" />
-                        <input type="submit" class="btn btn-danger" value="Видалити" disabled=@(user.Role == Roles.Owner) form="deleteUserForm_@user.UserId" />
-                    </form>
-                    <!-- Edit user button -->
-                    <a class="btn btn-primary" asp-action="EditUser" asp-route-userId="@user.UserId">Редагувати</a>
-                </td>
             </tr>
         }
     </tbody>
+    <tfoot>
+        Загальна кількість: @Model.Count
+    </tfoot>
 </table>

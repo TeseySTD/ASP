@@ -1,0 +1,14 @@
+@using Library.Models.Entities
+
+<div class="card mb-4">
+    <div class="card-header">Пошук продуктів</div>
+    <div class="card-body">
+        <form method="get" asp-controller="Catalog" asp-action="Index" id="searchProductForm">
+            <div class="form-group">
+                <label for="name">Назва</label>
+                <input type="text" class="form-control" name="name" form="searchProductForm" placeholder="Введіть назву" />
+            </div>
+            <input type="submit" form="searchProductForm" class="btn btn-primary mt-2" value="Пошук" />
+        </form>
+    </div>
+</div>

@@ -19,6 +19,7 @@ CREATE TABLE Products (
     ProductId INT PRIMARY KEY AUTO_INCREMENT,
     Title NVARCHAR(255) NOT NULL,
     ProductType INT NOT NULL,
+    AddInCatalogDate DATETIME,
     OwnerId INT,
     FOREIGN KEY (OwnerId) REFERENCES Users(UserId) ON DELETE CASCADE
 );

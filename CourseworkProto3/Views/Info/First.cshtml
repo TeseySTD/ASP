@@ -1,0 +1,59 @@
+@using Library.Models.Entities
+@model List<Borrow>
+@{
+    ViewData["Title"] = "Інформаційні запити";
+}
+
+@if (Model.Count == 0)
+{
+    <h3>Немає результатів</h3>
+}
+else{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Логін</th>
+                <th>Емейл</th>
+                <th>Стать</th>
+                <th>Дата позичення</th>
+                <th>Дата повернення</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var borrow in Model)
+            {
+                <tr class="@(Model.IndexOf(borrow) == 0 ? "table-info" : "")" >
+                    <td>
+                        @borrow.BorrowerId
+                    </td>
+                    <td>
+                        @borrow.Borrower.Login
+                    </td>
+                    <td>
+                        @borrow.Borrower.Email
+                    </td>
+                    <td>
+                        @switch(borrow.Borrower.Gender){
+                            case Gender.Male:
+                                <span>Чоловік</span>
+                                break;
+                            case Gender.Female:
+                                <span>Жінка</span>
+                                break;
+                        }
+                    </td>
+                    <td class="@(borrow.BorrowEndDate > DateTime.Now ? "" : "text-danger")">
+                        @borrow.BorrowStartDate.ToString("dd.MM.yyyy")
+                    </td>
+                    <td class="@(borrow.BorrowEndDate > DateTime.Now ? "" : "text-danger")">
+                        @borrow.BorrowEndDate.ToString("dd.MM.yyyy")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+

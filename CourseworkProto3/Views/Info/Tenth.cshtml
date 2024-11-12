@@ -1,0 +1,110 @@
+@using Library.Models.DTO.InfoResponses
+@using Library.Models.Entities
+@using Library.Services
+@model List<Borrow>
+
+@inject ProductService _productService
+@inject OrderService _orderService
+
+@{
+    ViewData["Title"] = "Інформаційні запити";
+}
+
+@if (Model.Count == 0)
+{
+    <h3>Немає результатів</h3>
+}
+else
+{
+    <h3>Перелік всіх продукцій</h3>
+    foreach (var borrow in Model){
+        <div class="col-md-4">
+            <div class="card mb-4" style="width: 25rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@borrow.Product.Title</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                    @if (borrow.Product.Book != null)
+                    {
+                        @:Книга
+                    }
+                    else if (borrow.Product.Disc != null)
+                    {
+                        switch(borrow.Product.Disc.DiscType) 
+                        {
+                            case DiscType.Movie : @:Фільм
+                            break;
+                            case DiscType.Music : @:Музика
+                            break;
+                            case DiscType.Game : @:Гра
+                            break;
+                            default : @:Диск
+                            break;
+                        }
+                    }
+                    </h6>
+                    <p class="card-text">
+                        @if (borrow.Product.Book != null)
+                        {
+                            <strong>Автор:</strong> @borrow.Product.Book.Author <br />
+                            <strong>Жанри:</strong> @string.Join(", ", borrow.Product.Book.Genre.Select(g => g.Name))<br /> 
+                            <strong>Рік видання:</strong> @borrow.Product.Book.PublicationYear
+                        }
+                        else if (borrow.Product.Disc != null)
+                        {
+                            <strong>Формат:</strong> @Enum.GetName(typeof(DiscFormat), borrow.Product.Disc.Format) <br />
+                            <strong>Рік:</strong> @borrow.Product.Disc.Year <br /> 
+                            if (borrow.Product.Disc.Movie != null)
+                            {
+                                <strong>Режисер:</strong> @borrow.Product.Disc.Movie.Director <br />
+                                <strong>Тривалість:</strong> @borrow.Product.Disc.Movie.Duration @:хвилин.  <br />
+                                <strong>Жанри:</strong> @string.Join(", ", borrow.Product.Disc.Movie.Genre.Select(g => g.Name))<br />
+                                <strong>Актори:</strong> 
+                                @string.Join(", ", borrow.Product.Disc.Movie.Actors.Select(a => a.Name))
+                            }
+                            else if (borrow.Product.Disc.Music != null)
+                            {
+                                <strong>Артист:</strong> @borrow.Product.Disc.Music.Artist <br />
+                                <strong>Жанри:</strong> @string.Join(", ", borrow.Product.Disc.Music.Genre.Select(g => g.Name))<br />
+                                <strong>Треки:</strong> @borrow.Product.Disc.Music.TrackCount
+                            }
+                            else if (borrow.Product.Disc.Game != null)
+                            {
+                                <strong>Жанри:</strong> @string.Join(", ", borrow.Product.Disc.Game.Genre.Select(g => g.Name)) <br />
+                                <strong>Видавець:</strong> @borrow.Product.Disc.Game.Publisher <br />
+                                <strong>Розробник:</strong> @borrow.Product.Disc.Game.Developer
+                            }
+                        }
+                        <br />
+                        <strong>Власник:</strong> @borrow.Product.Owner.Login <br />
+
+                        @{
+                            var (timeText, overdue) = GetRemainingTimeText(borrow.BorrowEndDate);
+
+                            <strong>Позичено користувачу:</strong> @($"{borrow.Borrower.Login} ({borrow.Borrower.Email})") <br />
+                            <strong>Позичено:</strong> @(borrow.BorrowStartDate.ToString("dd.MM.yyyy"))<br />
+                            <strong>Потрібно повернути:</strong> @(borrow.BorrowEndDate.ToString("dd.MM.yyyy"))<br />
+                            <p class="@(overdue ? "text-danger" : "")">
+                                <strong>@(overdue ? "Час позичання вичерпано!" : "Залишилось")</strong><br />
+                                @timeText
+                            </p>
+                        }
+
+                        
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@functions {
+    private (string, bool) GetRemainingTimeText(DateTime endDate)
+    {
+        var remainingTime = endDate - DateTime.Now;
+        bool isOverdue = remainingTime.TotalSeconds < 0;
+        var days = Math.Abs(remainingTime.Days);
+        var hours = Math.Abs(remainingTime.Hours);
+        var tuple = ($"{days} днів та {hours} годин", isOverdue);
+        return tuple;
+    }
+}

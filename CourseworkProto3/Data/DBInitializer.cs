@@ -112,7 +112,7 @@ public static class DBInitializer
                     new Disc { DiscId = 1, ProductId = 2, Format = DiscFormat.BluRay, Year = 2010, DiscType = DiscType.Movie },
                     new Disc { DiscId = 2, ProductId = 3, Format = DiscFormat.CD, Year = 1973, DiscType = DiscType.Music },
                     new Disc { DiscId = 3, ProductId = 4, Format = DiscFormat.BluRay, Year = 2020, DiscType = DiscType.Game },
-                    new Disc { DiscId = 4, ProductId = 5, Format = DiscFormat.CD, Year = 1986, DiscType = DiscType.Music }
+                    new Disc { DiscId = 4, ProductId = 5, Format = DiscFormat.CD, Year = 1986, DiscType = DiscType.Game }
                 };
                 context.Discs.AddRange(discs);
                 context.SaveChanges();
@@ -193,9 +193,7 @@ public static class DBInitializer
                 var borrows = new List<Borrow>
                 {
                     new Borrow { BorrowId = 1, LenderId = 1, BorrowerId = 2, ProductId = 1, BorrowStartDate = DateTime.Now.AddDays(-5), BorrowEndDate = DateTime.Now },
-                    new Borrow { BorrowId = 2, LenderId = 1, BorrowerId = 2, ProductId = 2, BorrowStartDate = DateTime.Now.AddDays(-3), BorrowEndDate = DateTime.Now.AddDays(7) },
-                    // new Borrow { BorrowId = 3, LenderId = 3, BorrowerId = 1, ProductId = 3, BorrowStartDate = DateTime.Now.AddDays(-2), BorrowEndDate = DateTime.Now.AddDays(-1)}
-                    
+                    new Borrow { BorrowId = 2, LenderId = 1, BorrowerId = 2, ProductId = 2, BorrowStartDate = DateTime.Now.AddDays(-3), BorrowEndDate = DateTime.Now.AddDays(7) },                    
                 };
                 context.Borrows.AddRange(borrows);
                 context.SaveChanges();

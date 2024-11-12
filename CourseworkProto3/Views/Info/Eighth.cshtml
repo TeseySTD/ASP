@@ -1,0 +1,61 @@
+@using Library.Models.Entities
+@using Library.Models.DTO.InfoResponses
+@model List<Order>
+
+@{
+    ViewData["Title"] = "Інформаційні запити";
+    
+    var lastMonth = DateTime.Now.AddMonths(-1);
+    decimal totalProfitLastMonth = Model
+        .Where(o => o.StartDate >= lastMonth 
+                && (o.Status == OrderStatus.Ordered || o.Status == OrderStatus.Returned)
+                && o.PaymentAmount.HasValue)
+        .Sum(o => o.PaymentAmount.Value);
+}
+
+@if (Model.Count == 0)
+{
+    <h3>Немає результатів</h3>
+}
+else
+{
+    <h3>Перелік продукції, яка була замовлена користувачами бібліотеки.</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Назва продукту</th>
+                <th>Статус замовлення</th>
+                <th>Користувач, який оформив замовлення</th>
+                <th>Дата початку замовлення</th>
+                <th>Дата закінчення замовлення</th>
+                <th>Сума оплати</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.OrderId</td>
+                    <td>@(order.Product != null ? order.Product.Title : "Відсутній")</td> 
+                    <td>
+                        @switch(order.Status){
+                            case OrderStatus.Ordered: @:Замовлений
+                            break;
+                            case OrderStatus.Pending: @:Очікує
+                            break;
+                            case OrderStatus.Returned: @:Повернуто
+                            break;
+                        }
+                    </td> 
+                    <td>@(order.User != null ? order.User.Login : "Відсутній")</td>
+                    <td>@(order.StartDate != null ? order.StartDate?.ToString("yyyy-MM-dd") : "Відсутня")</td> 
+                    <td>@(order.EndDate != null ? order.EndDate?.ToString("yyyy-MM-dd") : "Відсутня")</td>
+                    <td>@order.PaymentAmount?.ToString("C")</td> 
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    <h4>Чистий прибуток від замовлень за останній місяць: @totalProfitLastMonth.ToString("C")</h4>
+}

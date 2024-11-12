@@ -102,6 +102,30 @@ namespace Library.Data.Repo
             return _context.Users.FirstOrDefault(u => u.Role == Roles.Owner);
         }
 
+        
+        public async Task<List<Borrow>> GetBorrowersWithBorrows(){
+            return await _context.Borrows
+                                    .Include(b => b.Borrower)
+                                    .AsNoTracking()
+                                    .ToListAsync();
+            
+        }
+
+        public async Task<List<Borrow>> GetLendersWithBorrows(){
+            return await _context.Borrows
+                                    .Include(b => b.Lender)
+                                    .AsNoTracking()
+                                    .ToListAsync();
+        }
+
+        public async Task<List<Borrow>> GetDebtorsWithBorrows(){
+            return await _context.Borrows
+                        .Include(b => b.Borrower)
+                        .Where(b => b.BorrowEndDate < DateTime.Now)
+                        .AsNoTracking()
+                        .ToListAsync();
+        }
+
         public bool IsLoginTaken(string login)
         {
             return _context.Users.Any(u => u.Login == login);
@@ -127,5 +151,7 @@ namespace Library.Data.Repo
         {
             return _context.Users.Any(u => u.UserId == id);
         }
+
+        
     }
 }

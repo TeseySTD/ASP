@@ -4,15 +4,19 @@ using System.Text;
 using Library.Models.Entities;
 using Library.Data.Repo;
 using Library.Models.DTO;
+using Library.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Library.Services
 {
     public class UserService
     {
         private readonly UserRepository _userRepository;
-        public UserService(UserRepository userRepository)
+        private readonly LibraryContext _context;
+        public UserService(UserRepository userRepository, LibraryContext libraryContext)
         {
             _userRepository = userRepository;
+            _context = libraryContext;
         }
 
         public async Task<User> Register(RegisterUserRequest request)

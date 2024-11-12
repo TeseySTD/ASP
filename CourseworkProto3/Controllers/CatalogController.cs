@@ -14,23 +14,23 @@ namespace Library.Controllers
         private readonly ProductService _productService;
         private readonly UserRepository _userRepository;
 
-        private readonly TableService _tableService;
-
         public CatalogController(ProductRepository productRepository
                                 , ProductService productService
-                                , UserRepository userRepository
-                                , TableService tableService)
+                                , UserRepository userRepository)
         {
             _productRepository = productRepository;
             _productService = productService;
             _userRepository = userRepository;
-            _tableService = tableService;
         }
 
         // GET: Catalog
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string name)
         {
-            var products = await _productRepository.GetFull();
+            List<Product> products = await _productRepository.GetFull();
+            
+            if(!string.IsNullOrEmpty(name))
+                products = products.Where(p => p.Title.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList(); 
+
             return View(products);
         }
 

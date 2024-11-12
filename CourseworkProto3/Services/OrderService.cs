@@ -33,6 +33,14 @@ namespace Library.Services
             return await  _context.Orders.FirstOrDefaultAsync(o => o.ProductId == productId  && o.Status == OrderStatus.Ordered);
         }
 
+        public async Task<List<Order>> GetOrders(){
+            return await _context.Orders
+                                    .Include(o => o.Product)
+                                    .Include(o => o.User)
+                                    .AsNoTracking()
+                                    .ToListAsync();
+        }   
+
         public async Task CheckOrdersAsync()
         {
             var pendingOrders = _context.Orders

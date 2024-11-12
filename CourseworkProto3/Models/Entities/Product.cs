@@ -17,6 +17,8 @@ namespace Library.Models.Entities
         public int OwnerId { get; set; }
         public User Owner { get; set; }
 
+        public DateTime AddInCatalogDate { get; set; } = DateTime.Now;
+
         public Disc Disc { get; set; }
         public Book Book { get; set; }
     }

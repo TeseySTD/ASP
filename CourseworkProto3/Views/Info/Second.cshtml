@@ -1,0 +1,78 @@
+@using Library.Models.DTO.InfoResponses
+@using Library.Models.Entities
+@model SecondInfoResponse
+@{
+    ViewData["Title"] = "Інформаційні запити";
+}
+
+@if (Model.Debtors.Count == 0)
+{
+    <h3>Немає результатів</h3>
+}
+else{
+    @switch (Model.Type){
+        case "10 днів":
+            <h3>Перелік боржників, з терміном позичення більше 10 днів</h3>
+            break;
+        case "Гендерна ознака":
+            <h3>Перелік боржників, з гендерною ознакою</h3>
+            break;
+        default:
+            <h3>Перелік боржників</h3>
+            break;
+    }
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Логін</th>
+                <th>Емейл</th>
+                <th>Стать</th>
+                <th>Дата позичення</th>
+                <th>Дата повернення</th>
+                <th>Термін повернення</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var borrow in Model.Debtors)
+            {
+                <tr>
+                    <td>
+                        @borrow.BorrowerId
+                    </td>
+                    <td>
+                        @borrow.Borrower.Login
+                    </td>
+                    <td>
+                        @borrow.Borrower.Email
+                    </td>
+                    <td>
+                        @switch(borrow.Borrower.Gender){
+                            case Gender.Male:
+                                <span>Чоловік</span>
+                                break;
+                            case Gender.Female:
+                                <span>Жінка</span>
+                                break;
+                        }
+                    </td>
+                    <td class="@(borrow.BorrowEndDate > DateTime.Now ? "" : "text-danger")">
+                        @borrow.BorrowStartDate.ToString("dd.MM.yyyy")
+                    </td>
+                    <td class="@(borrow.BorrowEndDate > DateTime.Now ? "" : "text-danger")">
+                        @borrow.BorrowEndDate.ToString("dd.MM.yyyy")
+                    </td>
+                    <td class="@(borrow.BorrowEndDate > DateTime.Now ? "" : "text-danger")">
+                        @((DateTime.Now - borrow.BorrowEndDate).Days) днів
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            Загальна кількість: @Model.Debtors.Count
+        </tfoot>
+    </table>
+}
+
+

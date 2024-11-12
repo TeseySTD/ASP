@@ -1,0 +1,96 @@
+@using Library.Models.Entities
+@using Library.Models.DTO.InfoResponses
+
+@model SeventhInfoResponse
+@{
+    ViewData["Title"] = "Інформаційні запити";
+}
+
+@if (Model.DebtorsOfBooks.Count == 0 && Model.ConcreteUser == null)
+{
+    <h3>Немає результатів</h3>
+}
+else{
+    if(Model.DebtorsOfBooks.Count > 0){
+        <h3>Перелік всіх знайомих, які брали у вас книжки і ще не повернули</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Логін</th>
+                    <th>Емейл</th>
+                    <th>Стать</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.DebtorsOfBooks)
+                {
+                    <tr>
+                        <td>
+                            @user.UserId
+                        </td>
+                        <td>
+                            @user.Login
+                        </td>
+                        <td>
+                            @user.Email
+                        </td>
+                        <td>
+                            @switch(user.Gender){
+                                case Gender.Male:
+                                    <span>Чоловік</span>
+                                    break;
+                                case Gender.Female:
+                                    <span>Жінка</span>
+                                    break;
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else{
+        <h3>Конкретний користувач</h3>
+        <div class="row text-center">
+            <div class="card mb-4 shadow-sm w-50 mx-auto">
+                <div class="container mt-5">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">@Model.ConcreteUser.Login</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><strong>Пошта:</strong> @Model.ConcreteUser.Email</p>
+                        <p class="card-text"><strong>Роль:</strong> 
+                            @switch(Model.ConcreteUser.Role){
+                                case Roles.Owner:
+                                    <span>Власник</span>
+                                    break;
+                                case Roles.Administrator:
+                                    <span>Адміністратор</span>
+                                    break;
+                                case Roles.Operator:
+                                    <span>Оператор</span>
+                                    break;
+                                default:
+                                    <span></span>
+                                    break;
+                            }
+                        </p>
+                        <p class="card-text"><strong>Стать:</strong>                             
+                            @switch(Model.ConcreteUser.Gender){
+                                case Gender.Male:
+                                    <span>Чоловік</span>
+                                    break;
+                                case Gender.Female:
+                                    <span>Жінка</span>
+                                    break;
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
