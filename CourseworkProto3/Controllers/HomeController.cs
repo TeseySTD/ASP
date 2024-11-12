@@ -31,6 +31,16 @@ public class HomeController : Controller
         return View();
     }
 
+    [HttpGet]
+    public IActionResult ForgotPassword() => View();
+    [HttpPost]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO request){
+        var users = await _userRepository.GetAllUsers();
+        request.Passwords = users.Where(x => x.Login == request.Login)
+                                .Select(x => x.Password)
+                                .ToList();
+        return View(request);
+    }
 
     [Authorize(Policy = "Administrator")]
     public IActionResult Privacy()
@@ -68,5 +78,8 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
+    public IActionResult StatusCodeError(int statusCode) => View(statusCode);
+
 
 }

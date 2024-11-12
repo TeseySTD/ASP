@@ -89,5 +89,10 @@ namespace Library.Controllers
             else
                 return Json(true);
         }
+
+        public IActionResult ValidateLoginInDb(string login)
+        {
+            return Json(_userRepository.IsLoginTaken(login));
+        }
     }
 }

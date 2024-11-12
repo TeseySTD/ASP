@@ -55,6 +55,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseStatusCodePagesWithReExecute("/Home/StatusCodeError/","?statusCode={0}");
+
 app.UseHttpsRedirection();
 app.UseCookiePolicy(new CookiePolicyOptions{
     MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Strict,

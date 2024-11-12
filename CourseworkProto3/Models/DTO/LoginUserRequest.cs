@@ -8,7 +8,7 @@ public class LoginUserRequest
 {
     [Required(ErrorMessage = "Введіть електронну пошту.")]
     [StringLength(50, ErrorMessage = "Пошта не може бути довше 50 символів.")]
-    [EmailAddress]
+    [EmailAddress(ErrorMessage = "Введіть коректну електронну пошту.")]
     public string Email { get; set; } = null!;
 
     [Required(ErrorMessage = "Пароль не може бути порожнім.")]
