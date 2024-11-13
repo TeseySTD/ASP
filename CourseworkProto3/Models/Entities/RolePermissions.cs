@@ -7,10 +7,10 @@ public static class RolePermissions
 {
     private static readonly Dictionary<Roles, List<Permission>> _permissions = new()
     {
-        { Roles.Owner, new List<Permission> { Permission.Create, Permission.Read, Permission.Update, Permission.Delete } },
-        { Roles.Administrator, new List<Permission> { Permission.Create, Permission.Read, Permission.Update } },
-        { Roles.Operator, new List<Permission> { Permission.Read, Permission.Update } },
-        { Roles.Default, new List<Permission> { Permission.Read } }
+        { Roles.Owner, new List<Permission> { Permission.OwnerOnly, Permission.AdminOnly, Permission.OperatorOnly, Permission.Default } },
+        { Roles.Administrator, new List<Permission> { Permission.AdminOnly, Permission.OperatorOnly, Permission.Default } },
+        { Roles.Operator, new List<Permission> { Permission.OperatorOnly, Permission.Default } },
+        { Roles.Default, new List<Permission> { Permission.Default } }
     };
 
     public static readonly ReadOnlyDictionary<Roles, List<Permission>> Permissions = 

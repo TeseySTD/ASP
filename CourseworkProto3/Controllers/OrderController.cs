@@ -2,6 +2,7 @@ using Library.Data.Repo;
 using Library.Models.DTO;
 using Library.Models.Entities;
 using Library.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace Library.Controllers
             return View("Index", await _productRepository.GetFullForOrder());
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Product(int id){
             if(!await _productRepository.ProductExists(id) || !await _productService.IsProductForOrder(id)){
@@ -52,13 +54,14 @@ namespace Library.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Product(OrderDTO dto){
             await _orderService.MakeOrder(dto);
             return RedirectToAction("Index", "Catalog");
         }
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Return(int id){
             if(!await _productRepository.ProductExists(id) || !await _productService.IsProductOrdered(id)){

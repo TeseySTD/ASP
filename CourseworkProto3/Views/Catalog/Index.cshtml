@@ -1,31 +1,38 @@
 ﻿@using Library.Models.DTO
 @using Library.Models.Entities
 @using Library.Services
+@using Library.Data.Repo
+
 @inject ProductService _productService
+@inject UserRepository _userRepository
+
 @model IEnumerable<Library.Models.Entities.Product>
 @{
     ViewData["Title"] = "Каталог";
+    var currentUser = _userRepository.GetUserByToken(Context.Request.Cookies["access-cookie"]);
 }
 
 <div class="text-center">
     <h1 class="display-4">Каталог книг та дисків</h1>
     <p>Перелік всіх книг та дисків інформаційної системи <a asp-controller="Home" asp-action="Index">Домашньої бібліотеки</a>.</p>
     <p><a asp-controller="Order" asp-action="Index">Книги та диски на замовлення</a>.</p>
-    <div class="text-center mb-5 mt-5">
-        <a class="btn btn-primary" asp-action="AddBook" asp-controller="Catalog">
-            Додати книгу
-        </a>
-        <a class="btn btn-primary" asp-action="AddMovie" asp-controller="Catalog">
-            Додати фільм
-        </a>
-        <a class="btn btn-primary" asp-action="AddMusic" asp-controller="Catalog">
-            Додати музику
-        </a>
-        <a class="btn btn-primary" asp-action="AddGame" asp-controller="Catalog">
-            Додати гру
-        </a>
-    </div>
-
+    
+    @if(currentUser != null && currentUser.Role <= Roles.Operator){
+        <div class="text-center mb-5 mt-5">
+            <a class="btn btn-primary" asp-action="AddBook" asp-controller="Catalog">
+                Додати книгу
+            </a>
+            <a class="btn btn-primary" asp-action="AddMovie" asp-controller="Catalog">
+                Додати фільм
+            </a>
+            <a class="btn btn-primary" asp-action="AddMusic" asp-controller="Catalog">
+                Додати музику
+            </a>
+            <a class="btn btn-primary" asp-action="AddGame" asp-controller="Catalog">
+                Додати гру
+            </a>
+        </div>
+    }
 </div>
 
 @await Html.PartialAsync("_ProductFiltersPartial")

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Controllers
 {
-    [Authorize]
     public class CatalogController : Controller
     {
         private readonly ProductRepository _productRepository;
@@ -33,12 +32,14 @@ namespace Library.Controllers
 
             return View(products);
         }
-
+        
+        [Authorize(Policy = "Operator")]
         public async Task<ActionResult> Delete(int id){
             await _productRepository.DeleteById(id);
             return RedirectToAction("Index");
         }
 
+        [Authorize(Policy = "Operator")]
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
@@ -107,6 +108,7 @@ namespace Library.Controllers
             return View(dto);
         }
 
+        [Authorize(Policy = "Operator")]
         [HttpPost]
         public async Task<IActionResult> Update(ProductDto dto)
         {
@@ -118,10 +120,12 @@ namespace Library.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Policy = "Operator")]
         [HttpGet]
         public IActionResult AddBook(){
             return View();
         }
+        [Authorize(Policy = "Operator")]
         [HttpPost]
         public async Task<IActionResult> AddBook(ProductDto dto){
             dto.OwnerId = JwtService.GetUserIdFromToken(Request.Cookies["access-cookie"]);
@@ -129,10 +133,12 @@ namespace Library.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Policy = "Operator")]
         [HttpGet]
         public IActionResult AddMovie(){
             return View();
         }
+        [Authorize(Policy = "Operator")]
         [HttpPost]
         public async Task<IActionResult> AddMovie(ProductDto dto){
             dto.OwnerId = JwtService.GetUserIdFromToken(Request.Cookies["access-cookie"]);
@@ -140,10 +146,13 @@ namespace Library.Controllers
             return RedirectToAction("Index");
         }
 
+
+        [Authorize(Policy = "Operator")]
         [HttpGet]
         public IActionResult AddMusic(){
             return View();
         }
+        [Authorize(Policy = "Operator")]
         [HttpPost]
         public async Task<IActionResult> AddMusic(ProductDto dto){
             dto.OwnerId = JwtService.GetUserIdFromToken(Request.Cookies["access-cookie"]);
@@ -151,10 +160,12 @@ namespace Library.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Policy = "Operator")]
         [HttpGet]
         public IActionResult AddGame(){
             return View();
         }
+        [Authorize(Policy = "Operator")]
         [HttpPost]
         public async Task<IActionResult> AddGame(ProductDto dto){
             dto.OwnerId = JwtService.GetUserIdFromToken(Request.Cookies["access-cookie"]);
@@ -162,6 +173,7 @@ namespace Library.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Borrow(int id){
             if(await _productRepository.ProductExists(id) && !await _productService.IsProductBorrowed(id) 
@@ -179,13 +191,14 @@ namespace Library.Controllers
             else
                 return NotFound();
         }
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Borrow(BorrowDto dto){
             await _productService.BorrowProduct(dto);
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         [HttpGet] 
         public async Task<IActionResult> Give(int id){
             if(await _productRepository.ProductExists(id) && !await _productService.IsProductBorrowed(id) 
@@ -202,7 +215,7 @@ namespace Library.Controllers
             else
                 return NotFound();
         }
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Give(GiveDTO dto){
             var borrower = await _userRepository.GetUserByEmail(dto.Email);
@@ -218,6 +231,7 @@ namespace Library.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize] 
         [HttpGet]
         public async Task<IActionResult> Return(int id){
             if(await _productService.IsProductBorrowedByUser(id, Request.Cookies["access-cookie"])){

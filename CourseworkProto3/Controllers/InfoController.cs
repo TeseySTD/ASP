@@ -2,10 +2,12 @@ using Library.Data.Repo;
 using Library.Models.DTO.InfoResponses;
 using Library.Models.Entities;
 using Library.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Controllers
 {
+    [Authorize]
     public class InfoController : Controller
     {
         private readonly ProductRepository _productRepository;

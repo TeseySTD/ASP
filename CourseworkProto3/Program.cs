@@ -38,10 +38,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             }
         };
     });
+
 builder.Services.AddAuthorization(options => {
     options.AddPolicy("Owner", policy => policy.AddRequirements(
-        new PermissionRequirement(Permission.Create, Permission.Read, Permission.Update, Permission.Delete)));
-    options.AddPolicy("Administrator", policy => policy.AddRequirements(new PermissionRequirement( Permission.Create)));
+        new PermissionRequirement(Permission.OwnerOnly)));
+    options.AddPolicy("Administrator", policy => policy.AddRequirements(
+        new PermissionRequirement( Permission.AdminOnly)));
+    options.AddPolicy("Operator", policy => policy.AddRequirements(
+        new PermissionRequirement( Permission.OperatorOnly)));
+    options.AddPolicy("Default", policy => policy.AddRequirements(
+        new PermissionRequirement( Permission.Default)));
 });
 DependencyService.InjectDependencies(builder.Services);
 

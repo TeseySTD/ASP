@@ -1,6 +1,7 @@
 using Library.Data.Repo;
 using Library.Models.DTO;
 using Library.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Differencing;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Library.Controllers
 {
+    [Authorize(Policy = "Administrator")]
     public class AdminController : Controller
     {
         private readonly TableService _tableService;
@@ -34,6 +36,7 @@ namespace Library.Controllers
             return View(tables);
         }
 
+        [Authorize(Policy = "Owner")]
         public async Task<IActionResult> Users()
         {
             var users = await _userRepository.GetAllUsers();
@@ -88,12 +91,14 @@ namespace Library.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Policy = "Owner")]
         [HttpGet]
         public IActionResult AddTable()
         {
             return View();
         }
 
+        [Authorize(Policy = "Owner")]
         [HttpPost]
         public async Task<IActionResult> AddTable(AddTableRequest table)
         {
@@ -101,6 +106,7 @@ namespace Library.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Policy = "Owner")]
         [HttpGet]
         public async Task<IActionResult> DeleteTable(string tableName)
         {
@@ -111,6 +117,7 @@ namespace Library.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Policy = "Owner")]
         [HttpGet]
         public async Task<IActionResult> EditUser(int userId){
             if(!_userRepository.IsUser(userId))
@@ -129,6 +136,7 @@ namespace Library.Controllers
             return View(editRequest);
         }
 
+        [Authorize(Policy = "Owner")]
         [HttpPost]
         public async Task<IActionResult> EditUser(EditUserRequest request){
             if(!_userRepository.IsUser(request.UserId))
@@ -138,6 +146,7 @@ namespace Library.Controllers
             return RedirectToAction("Users");
         }
 
+        [Authorize(Policy = "Owner")]
         [HttpPost]
         public async Task<IActionResult> DeleteUser(int userId){
             if(!_userRepository.IsUser(userId))

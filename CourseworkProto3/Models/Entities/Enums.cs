@@ -18,10 +18,10 @@ namespace Library.Models.Entities
     }
 
     public enum Permission{
-        Create=1,
-        Read=2,
-        Update=3,
-        Delete=4
+        OwnerOnly=1,
+        AdminOnly=2,
+        OperatorOnly=3,
+        Default=4
     }
 
     public enum ProductType{

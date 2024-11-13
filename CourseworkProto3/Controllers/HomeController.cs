@@ -43,12 +43,6 @@ public class HomeController : Controller
     }
 
     [Authorize(Policy = "Administrator")]
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Register(RegisterUserRequest request)
     {
