@@ -14,5 +14,9 @@
             "username": "root",
             "password": "1234567890"
         }
-    ]
+    ],
+    "editor.tokenColorCustomizations": {
+        "comments": "",
+        "textMateRules": []
+    }
 }

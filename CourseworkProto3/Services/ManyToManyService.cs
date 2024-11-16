@@ -1,5 +1,7 @@
 using Library.Data;
+using Library.Models.DTO;
 using Library.Models.Entities;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 namespace Library.Services;
 
@@ -107,4 +109,118 @@ public class ManyToManyService
 
         return resultActors;
     }
+
+    public async Task<Tuple<List<BookGenre>, List<MusicGenre>,List<MovieGenre>, List<GameGenre>, List<Actor>>> GetGenresAndActors(){
+        List<BookGenre> bookGenres = await _context.BookGenres
+                                                    .Include(b => b.Books)
+                                                        .ThenInclude(b => b.Product)
+                                                    .AsNoTracking().ToListAsync();
+
+        List<MusicGenre> musicGenres = await _context.MusicGenres
+                                                    .Include(b => b.Music)
+                                                        .ThenInclude(m => m.Disc)
+                                                            .ThenInclude(d => d.Product)
+                                                    .AsNoTracking().ToListAsync();
+
+        List<MovieGenre> movieGenres = await _context.MovieGenres
+                                                    .Include(b => b.Movies)
+                                                        .ThenInclude(m => m.Disc)
+                                                            .ThenInclude(d => d.Product)
+                                                    .AsNoTracking().ToListAsync();     
+
+        List<GameGenre> gameGenres = await _context.GameGenres
+                                                    .Include(b => b.Games)
+                                                        .ThenInclude(m => m.Disc)
+                                                            .ThenInclude(d => d.Product)
+                                                    .AsNoTracking().ToListAsync();
+
+        List<Actor> actors = await _context.Actors
+                                            .Include(b => b.Movies)
+                                                .ThenInclude(m => m.Disc)
+                                                    .ThenInclude(d => d.Product)
+                                            .AsNoTracking().ToListAsync();
+
+        return Tuple.Create(bookGenres, musicGenres, movieGenres, gameGenres, actors);
+    } 
+
+    public async Task Update(EditActorOrGenreRequest request){
+        switch (request.Type){
+            case "actor":
+                var actor = await _context.Actors.FirstOrDefaultAsync(a => a.ActorId == request.Id);
+                actor!.Name = request.Name;
+                _context.SaveChanges();
+                break;
+            case "book":
+                var book = await _context.BookGenres.FirstOrDefaultAsync(a => a.GenreId == request.Id);
+                book!.Name = request.Name;
+                _context.SaveChanges();
+                break;
+            case "movie":
+                var movie = await _context.MovieGenres.FirstOrDefaultAsync(a => a.GenreId == request.Id);
+                movie!.Name = request.Name;
+                _context.SaveChanges();
+                break;
+            case "music":
+                var music = await _context.MusicGenres.FirstOrDefaultAsync(a => a.GenreId == request.Id);
+                music!.Name = request.Name;
+                _context.SaveChanges();
+                break;
+            case "game":
+                var game = await _context.GameGenres.FirstOrDefaultAsync(a => a.GenreId == request.Id);
+                game!.Name = request.Name; 
+                _context.SaveChanges();
+                break;
+            default: break;
+        }
+    }
+
+    public async Task Delete(int id, string type){
+        switch (type){
+            case "actor":
+                var actor = await _context.Actors.FirstOrDefaultAsync(a => a.ActorId == id);
+                if (actor != null){
+                    _context.Actors.Remove(actor);
+                    _context.SaveChanges();
+                }
+                break;
+            case "book":
+                var book = await _context.BookGenres.FirstOrDefaultAsync(a => a.GenreId == id);
+                if(book != null){
+                    _context.BookGenres.Remove(book!);
+                    _context.SaveChanges();
+                }
+                break;
+            case "movie":
+                var movie = await _context.MovieGenres.FirstOrDefaultAsync(a => a.GenreId == id);
+                if(movie != null){
+                    _context.MovieGenres.Remove(movie!);
+                    _context.SaveChanges();
+                }
+                break;
+            case "music":
+                var music = await _context.MusicGenres.FirstOrDefaultAsync(a => a.GenreId == id);
+                if(music != null){
+                    _context.MusicGenres.Remove(music!);
+                    _context.SaveChanges();
+                }
+                break; ;
+            case "game": {}
+                var game = await _context.GameGenres.FirstOrDefaultAsync(a => a.GenreId == id);
+                if(game != null){
+                    _context.GameGenres.Remove(game!);
+                    _context.SaveChanges(); 
+                }
+                break;
+            default: break;
+        }
+    }
+
+    public async Task<bool> ActorOrGenreExists(int id){
+        return await _context.BookGenres.AnyAsync(b => b.GenreId == id) || 
+                await _context.MusicGenres.AnyAsync(m => m.GenreId == id) || 
+                await _context.MovieGenres.AnyAsync(m => m.GenreId == id) || 
+                await _context.GameGenres.AnyAsync(g => g.GenreId == id) ||
+                await _context.Actors.AnyAsync(a => a.ActorId == id); 
+    }
+
 }

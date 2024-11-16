@@ -30,7 +30,10 @@ namespace Library.Services
         }
 
         public async Task<Order?> GetOrderedOrder(int productId){
-            return await  _context.Orders.FirstOrDefaultAsync(o => o.ProductId == productId  && o.Status == OrderStatus.Ordered);
+            return await  _context.Orders
+                                    .Include(o => o.User)
+                                    .AsNoTracking()
+                                    .FirstOrDefaultAsync(o => o.ProductId == productId  && o.Status == OrderStatus.Ordered);
         }
 
         public async Task<List<Order>> GetOrders(){

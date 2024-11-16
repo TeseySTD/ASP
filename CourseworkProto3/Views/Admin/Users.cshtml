@@ -20,7 +20,7 @@
             <th>Пароль</th>
             <th>Роль</th>
             <th>Стать</th>
-            <th>Дії</th>
+            <th class="col-2">Дії</th>
         </tr>
     </thead>
 
@@ -67,14 +67,14 @@
                     }
                 </td>
 
-                <td class="col-3">
+                <td class="d-flex" >
                     <!-- Delete user button -->
                     <form asp-action="DeleteUser" method="post" style="display:inline;" id="deleteUserForm_@user.UserId">
                         <input type="hidden" name="userId" value="@user.UserId" form="deleteUserForm_@user.UserId" />
                         <input type="submit" class="btn btn-danger" value="Видалити" disabled=@(user.Role == Roles.Owner) form="deleteUserForm_@user.UserId" />
                     </form>
                     <!-- Edit user button -->
-                    <a class="btn btn-primary" asp-action="EditUser" asp-route-userId="@user.UserId">Редагувати</a>
+                    <a class="btn btn-primary ms-1" asp-action="EditUser" asp-route-userId="@user.UserId">Редагувати</a>
                 </td>
             </tr>
         }

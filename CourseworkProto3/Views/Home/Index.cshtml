@@ -1,8 +1,96 @@
 ﻿@{
-    ViewData["Title"] = "Головна";
+    ViewData["Title"] = "Головна - Домашня бібліотека";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container py-5">
+    <!-- Головний банер -->
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6">
+            <h1 class="display-4 text-gradient fw-bold mb-3">Ваша домашня бібліотека</h1>
+            <p class="lead text-dark mb-4">Організуйте свої книги, фільми, музику та ігри, а також позичайте та орендуйте продукти легко та зручно.</p>
+            <div class="d-flex gap-3">
+                <a href="#catalog" class="btn btn-primary">
+                    <i class="bi bi-bookmark-star me-2"></i>Переглянути каталог
+                </a>
+                <a href="#borrow" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left-right me-2"></i>Позичити продукт
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-6 text-center">
+            <i class="bi bi-bank text-gradient" style="font-size: 10rem;"></i>
+        </div>
+    </div>
+
+    <!-- Каталог -->
+    <div class="row mb-5" id="catalog">
+        <div class="col-12 text-center mb-4">
+            <h1 class="text-primary display-3 fw-bold">Каталог продуктів</h1>
+            <p class="text-muted">Книги, фільми, музика, ігри — все в одному місці!</p>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="text-primary mb-3">
+                        <i class="bi bi-book display-4"></i>
+                    </div>
+                    <h5 class="card-title text-dark">Книги</h5>
+                    <p class="card-text text-muted">Збережіть улюблені книги та діліться ними з іншими.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="text-primary mb-3">
+                        <i class="bi bi-film display-4"></i>
+                    </div>
+                    <h5 class="card-title text-dark">Фільми</h5>
+                    <p class="card-text text-muted">Колекція ваших улюблених фільмів у доступі 24/7.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="text-primary mb-3">
+                        <i class="bi bi-music-note-beamed display-4"></i>
+                    </div>
+                    <h5 class="card-title text-dark">Музика</h5>
+                    <p class="card-text text-muted">Зберігайте та слухайте музику, яку любите.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="text-primary mb-3">
+                        <i class="bi bi-controller display-4"></i>
+                    </div>
+                    <h5 class="card-title text-dark">Ігри</h5>
+                    <p class="card-text text-muted">Зберігайте свою ігрову бібліотеку в одному місці.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Функції -->
+    <div class="row bg-light p-5 rounded-4 mb-5">
+        <div class="col-md-4 text-center mb-4">
+            <i class="bi bi-arrow-left-right display-4 text-primary mb-3"></i>
+            <h5 class="fw-bold">Позичання</h5>
+            <p class="text-muted">Діліться своїми продуктами з друзями та отримуйте доступ до їхніх.</p>
+        </div>
+        <div class="col-md-4 text-center mb-4">
+            <i class="bi bi-cash-coin display-4 text-primary mb-3"></i>
+            <h5 class="fw-bold">Оренда</h5>
+            <p class="text-muted">Орендуйте продукти із зовнішніх джерел з прозорою оплатою.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="bi bi-collection display-4 text-primary mb-3"></i>
+            <h5 class="fw-bold">Організація</h5>
+            <p class="text-muted">Організуйте свою бібліотеку за категоріями, жанрами та власниками.</p>
+        </div>
+    </div>
+
 </div>

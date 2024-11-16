@@ -12,7 +12,31 @@
 }
 
 <div class="col-md-4">
-    <div class="card mb-4" style="width: 25rem;">
+    <div class="card shadow-sm mb-4 border-primary" style="width: 25rem;">
+        <div class="card-header text-center bg-light">
+            @if (Model.Book != null)
+            {
+                <i class="bi bi-book-half text-primary" style="font-size: 2rem;"></i>
+            }
+            else if (Model.Disc != null)
+            {
+                switch (Model.Disc.DiscType)
+                {
+                    case DiscType.Movie:
+                        <i class="bi bi-film text-danger" style="font-size: 2rem;"></i>
+                        break;
+                    case DiscType.Music:
+                        <i class="bi bi-music-note text-primary" style="font-size: 2rem;"></i>
+                        break;
+                    case DiscType.Game:
+                        <i class="bi bi-controller text-warning" style="font-size: 2rem;"></i>
+                        break;
+                    default:
+                        <i class="bi bi-disc text-secondary" style="font-size: 2rem;"></i>
+                        break;
+                }
+            }
+        </div>
         <div class="card-body">
             <h5 class="card-title">@Model.Title</h5>
             <h6 class="card-subtitle mb-2 text-muted">
@@ -86,7 +110,8 @@
                 {
                     var order = await _orderService.GetOrderedOrder(Model.ProductId);
                     var (timeText, overdue) = GetRemainingTimeText(order.EndDate.Value);
-                    @* <strong>Замовлено користувачу:</strong> @($"{order.User.Login} ({order.User.Email})") <br /> *@
+                    @if (order.User != null){
+                        <strong>Замовлено користувачем:</strong> @($"{order.User.Login} ({order.User.Email})") <br />}
                     <strong>Дата замовлення:</strong> @(order.StartDate?.ToString("dd.MM.yyyy"))<br />
                     <strong>Дата повернення:</strong> @(order.EndDate?.ToString("dd.MM.yyyy"))<br />
                     <p class="@(overdue ? "text-danger" : "")">
@@ -101,25 +126,25 @@
             @if(currentUser != null){
                 @if(!await _productService.IsProductForOrder(Model.ProductId)){
                     @if(currentUser.Role == Roles.Administrator || currentUser.Role == Roles.Owner || currentUser.Role == Roles.Operator){
-                        <a href="@Url.Action("Update", "Catalog", new { id = Model.ProductId })" class="card-link">Редагувати</a>
-                        <a href="@Url.Action("Delete", "Catalog", new { id = Model.ProductId })" class="card-link text-danger">Видалити</a>
+                        <a title="Редагувати" href="@Url.Action("Update", "Catalog", new { id = Model.ProductId })" class="card-link btn btn-primary"><i class="bi bi-pen"></i></a>
+                        <a title="Видалити" href="@Url.Action("Delete", "Catalog", new { id = Model.ProductId })" class="card-link btn btn-danger"><i class="bi bi-trash"></i></a>
                     }
                     @if (!await _productService.IsProductBorrowed(Model.ProductId))
                     {
                         if(!await _productService.IsUserOwner(Model.ProductId, Context.Request.Cookies["access-cookie"])){
-                            <a href="@Url.Action("Borrow", "Catalog", new { id = Model.ProductId })" class="card-link text-secondary">Позичити собі</a>
+                            <a title="Позичити собі" href="@Url.Action("Borrow", "Catalog", new { id = Model.ProductId })" class="card-link btn btn-outline-primary"><i class="bi bi-arrow-bar-down text-warning mb-3"></i></a>
                         }
                         else{
-                            <a href="@Url.Action("Give", "Catalog", new { id = Model.ProductId })" class="card-link text-secondary">Позичити комусь</a>
+                            <a title="Позичити комусь" href="@Url.Action("Give", "Catalog", new { id = Model.ProductId })" class="card-link btn btn-outline-primary"><i class="bi bi-arrow-bar-up text-warning mb-3"></i></a>
                         }
                         
                     }
                     else if(await _productService.IsProductBorrowedByUser(Model.ProductId, Context.Request.Cookies["access-cookie"])){
-                        <a href="@Url.Action("Return", "Catalog", new { id = Model.ProductId })" class="card-link text-info">Повернути</a>
+                        <a title="Повернути" href="@Url.Action("Return", "Catalog", new { id = Model.ProductId })" class="card-link btn btn-outline-primary"><i class="bi bi-arrow-return-left text-warning mb-3"></i></a>
                     }
                 }
                 else if(!await _productService.IsProductOrdered(Model.ProductId)){
-                    <a href="@Url.Action("Product", "Order", new { id = Model.ProductId })" class="card-link text-info">Оформити замовлення</a>
+                    <a title="Замовити" href="@Url.Action("Product", "Order", new { id = Model.ProductId })" class="card-link btn btn-outline-dark"><i class="bi bi-cash-coin text-gradient  mb-3"></i></a>
                 }
                 else if(await _productService.IsProductOrderedByUser(Model.ProductId, Context.Request.Cookies["access-cookie"])){
                     <a href="@Url.Action("Return", "Order", new { id = Model.ProductId })" class="card-link text-info">Повернути</a>

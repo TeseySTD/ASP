@@ -1,0 +1,240 @@
+@using Library.Models.Entities
+
+@model Tuple<List<BookGenre>, List<MusicGenre>, List<MovieGenre>, List<GameGenre>, List<Actor>>
+@{
+    ViewData["Title"] = "Каталог Акторів та Жанрів";
+}
+
+<div class="text-center">
+    <h3>Каталог Акторів та Жанрів продуктів</h3>
+</div>
+
+<a asp-action="Index" class="btn btn-primary mb-3">Повернутись назад</a>
+
+<!-- Таблиця для жанрів книг -->
+<h4>Жанри книг</h4>
+@if (Model.Item1.Count == 0)
+{
+    <p>Немає жанрів</p>
+}
+else{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Назва жанру</th>
+                <th>Книги жанру</th>
+                    <th class="col-1">Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var genre in Model.Item1)
+            {
+                <tr>
+                    <td>@genre.GenreId</td>
+                    <td>@genre.Name</td>
+                    <td>@(genre.Books.Select(b => b.Product.Title).Aggregate((a, b) => a + ", " + b))</td>
+                    <td class="d-flex">
+                        <form method="get" asp-action="EditActorOrGenre" >
+                            <input type="hidden" name="id" value="@genre.GenreId" />
+                            <input type="hidden" name="type" value="book" />
+                            <button type="submit" class="btn btn-primary" title="Редагувати">
+                                <i class="bi bi-pencil-square"></i>    
+                            </button>
+                        </form>
+                        <form class="ms-2" asp-action="DeleteActorOrGenre" method="post">
+                            <input type="hidden" name="id" value="@genre.GenreId" />
+                            <input type="hidden" name="type" value="book" />
+                            <button type="submit" class="btn btn-danger" title="Видалити">
+                                <i class="bi bi-trash"></i>    
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+<!-- Таблиця для жанрів музики -->
+<h4>Жанри музики</h4>
+@if(Model.Item2.Count == 0)
+{
+    <p>Немає жанрів</p>
+}
+else{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Назва жанру</th>
+                <th>Музика жанру</th>
+                    <th class="col-1">Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var genre in Model.Item2)
+            {
+                <tr>
+                    <td>@genre.GenreId</td>
+                    <td>@genre.Name</td>
+                    <td>@(genre.Music.Count > 0 ? genre.Music.Select(b => b.Disc.Product.Title).Aggregate((a, b) => a + ", " + b) : "-")</td>
+                    <td class="d-flex">
+                        <form method="get" asp-action="EditActorOrGenre" >
+                            <input type="hidden" name="id" value="@genre.GenreId" />
+                            <input type="hidden" name="type" value="music" />
+                            <button type="submit" class="btn btn-primary" title="Редагувати">
+                                <i class="bi bi-pencil-square"></i>    
+                            </button>
+                        </form>
+                        <form class="ms-2" asp-action="DeleteActorOrGenre" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@genre.GenreId" />
+                            <input type="hidden" name="type" value="music" />
+                            <button type="submit" class="btn btn-danger" title="Видалити">
+                                <i class="bi bi-trash"></i>    
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+<!-- Таблиця для жанрів фільмів -->
+<h4>Жанри фільмів</h4>
+@if(Model.Item3.Count == 0)
+{
+    <p>Немає жанрів</p>
+}
+else{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Назва жанру</th>
+                <th>Фільми жанру</th>
+                    <th class="col-1">Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var genre in Model.Item3)
+            {
+                <tr>
+                    <td>@genre.GenreId</td>
+                    <td>@genre.Name</td>
+                    <td>@(genre.Movies.Count > 0 ? genre.Movies.Select(b => b.Disc.Product.Title).Aggregate((a, b) => a + ", " + b) : "Відсутні")</td>
+                    <td class="d-flex">
+                        <form method="get" asp-action="EditActorOrGenre" >
+                            <input type="hidden" name="id" value="@genre.GenreId" />
+                            <input type="hidden" name="type" value="movie" />
+                            <button type="submit" class="btn btn-primary" title="Редагувати">
+                                <i class="bi bi-pencil-square"></i>    
+                            </button>
+                        </form>
+                        <form class="ms-2" asp-action="DeleteActorOrGenre" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@genre.GenreId" />
+                            <input type="hidden" name="type" value="movie" />
+                            <button type="submit" class="btn btn-danger" title="Видалити">
+                                <i class="bi bi-trash"></i>    
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+<!-- Таблиця для жанрів ігор -->
+<h4>Жанри ігор</h4>
+@if(Model.Item4.Count == 0)
+{
+    <p>Немає жанрів</p>
+}
+else{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Назва жанру</th>
+                <th>Ігри жанру</th>
+                    <th class="col-1">Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var genre in Model.Item4)
+            {
+                <tr>
+                    <td>@genre.GenreId</td>
+                    <td>@genre.Name</td>
+                    <td>@(genre.Games.Count > 0 ? genre.Games.Select(b => b.Disc.Product.Title).Aggregate((a, b) => a + ", " + b) : "Відсутні")</td>
+                    <td class="d-flex">
+                        <form method="get" asp-action="EditActorOrGenre" >
+                            <input type="hidden" name="id" value="@genre.GenreId" />
+                            <input type="hidden" name="type" value="game" />
+                            <button type="submit" class="btn btn-primary" title="Редагувати">
+                                <i class="bi bi-pencil-square"></i>    
+                            </button>
+                        </form>
+                        <form class="ms-2" asp-action="DeleteActorOrGenre" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@genre.GenreId" />
+                            <input type="hidden" name="type" value="game" />
+                            <button type="submit" class="btn btn-danger" title="Видалити">
+                                <i class="bi bi-trash"></i>    
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<!-- Таблиця для акторів -->
+<h4>Aктори фільмів</h4>
+@if(Model.Item5.Count == 0){
+    <p>Немає акторів</p>
+}
+else{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Ім'я актору</th>
+                <th>Фільми актора</th>
+                <th class="col-1">Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var actor in Model.Item5)
+            {
+                <tr>
+                    <td>@actor.ActorId</td>
+                    <td>@actor.Name</td>
+                    <td>@(actor.Movies.Count > 0 ? actor.Movies.Select(b => b.Disc.Product.Title).Aggregate((a, b) => a + ", " + b) : "-")</td>
+                    <td class="d-flex">
+                        <form method="get" asp-action="EditActorOrGenre" >
+                            <input type="hidden" name="id" value="@actor.ActorId" />
+                            <input type="hidden" name="type" value="actor" />
+                            <button type="submit" class="btn btn-primary" title="Редагувати">
+                                <i class="bi bi-pencil-square"></i>    
+                            </button>
+                        </form>
+                        <form class="ms-2" asp-action="DeleteActorOrGenre" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@actor.ActorId" />
+                            <input type="hidden" name="type" value="actor" />
+                            <button type="submit" class="btn btn-danger" title="Видалити">
+                                <i class="bi bi-trash"></i>    
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

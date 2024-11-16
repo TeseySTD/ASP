@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Library.Data;
 using Library.Data.Repo;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +9,13 @@ namespace Library.Controllers
     {
         private readonly UserRepository _userRepository;
         private readonly TableService _tableService;
+        private readonly LibraryContext _context;
 
-        public ValidationController(UserRepository userRepository, TableService tableService)
+        public ValidationController(UserRepository userRepository, TableService tableService, LibraryContext context)
         {
             _userRepository = userRepository;
             _tableService = tableService;
+            _context = context;
         }
 
         // GET: Validation
@@ -93,6 +96,19 @@ namespace Library.Controllers
         public IActionResult ValidateLoginInDb(string login)
         {
             return Json(_userRepository.IsLoginTaken(login));
+        }
+
+        public IActionResult ValidateGenreOrActor(string name, int id, string type){
+            bool result = type switch{
+                "actor" => !_context.Actors.Any(a => a.ActorId != id && a.Name.ToLower() == name.ToLower()),
+                "book" => !_context.BookGenres.Any(b => b.GenreId != id && b.Name.ToLower() == name.ToLower()),
+                "movie" => !_context.MovieGenres.Any(m => m.GenreId != id && m.Name.ToLower() == name.ToLower()),
+                "music" => !_context.MusicGenres.Any(m => m.GenreId != id && m.Name.ToLower() == name.ToLower()),
+                "game" => !_context.GameGenres.Any(g => g.GenreId != id && g.Name.ToLower() == name.ToLower()),
+                _ => false
+            };
+
+            return Json(result ? true : type=="actor" ? "Актор з таким ім'ям вже існує" : "Жанр з таким ім'ям вже існує" );
         }
     }
 }

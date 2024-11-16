@@ -21,7 +21,7 @@ CREATE TABLE Products (
     ProductType INT NOT NULL,
     AddInCatalogDate DATETIME,
     OwnerId INT,
-    FOREIGN KEY (OwnerId) REFERENCES Users(UserId) ON DELETE CASCADE
+    FOREIGN KEY (OwnerId) REFERENCES Users(UserId) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Таблиця для дисків
@@ -31,7 +31,7 @@ CREATE TABLE Discs (
     Format INT NOT NULL,
     Year INT,
     DiscType INT NOT NULL,
-    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Таблиця для фільмів
@@ -40,7 +40,7 @@ CREATE TABLE Movies (
     DiscId INT NOT NULL,
     Duration INT NOT NULL,
     Director NVARCHAR(255),
-    FOREIGN KEY (DiscId) REFERENCES Discs(DiscId) ON DELETE CASCADE
+    FOREIGN KEY (DiscId) REFERENCES Discs(DiscId) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Таблиця для акторів
@@ -64,7 +64,7 @@ CREATE TABLE Music (
     DiscId INT NOT NULL,
     TrackCount INT,
     Artist NVARCHAR(255),
-    FOREIGN KEY (DiscId) REFERENCES Discs(DiscId) ON DELETE CASCADE
+    FOREIGN KEY (DiscId) REFERENCES Discs(DiscId) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Таблиця для ігор
@@ -73,7 +73,7 @@ CREATE TABLE Games (
     DiscId INT NOT NULL,
     Developer NVARCHAR(255),
     Publisher NVARCHAR(255),
-    FOREIGN KEY (DiscId) REFERENCES Discs(DiscId) ON DELETE CASCADE
+    FOREIGN KEY (DiscId) REFERENCES Discs(DiscId) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Таблиця для книг
@@ -82,7 +82,7 @@ CREATE TABLE Books (
     ProductId INT NOT NULL,
     Author NVARCHAR(255),
     PublicationYear INT,
-    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Таблиця для позичень
@@ -93,9 +93,9 @@ CREATE TABLE Borrows (
     ProductId INT NOT NULL,
     BorrowStartDate DATE NOT NULL,
     BorrowEndDate DATE,
-    FOREIGN KEY (LenderId) REFERENCES Users(UserId) ON DELETE CASCADE,
-    FOREIGN KEY (BorrowerId) REFERENCES Users(UserId) ON DELETE CASCADE,
-    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE
+    FOREIGN KEY (LenderId) REFERENCES Users(UserId) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (BorrowerId) REFERENCES Users(UserId) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Таблиця для замовленнь продуктів 
@@ -107,8 +107,8 @@ CREATE TABLE Orders (
     EndDate DATE, -- дата завершення оренди
     PaymentAmount DECIMAL(7, 2) DEFAULT 0.0,
     Status INT, -- статус замовлення
-    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE SET NULL,
-    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE SET NULL
+    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 
@@ -140,8 +140,8 @@ CREATE TABLE GameGenres (
 CREATE TABLE BookBookGenre (
     BooksBookId INT NOT NULL,
     GenreId INT NOT NULL,
-    FOREIGN KEY (BooksBookId) REFERENCES Books(BookId) ON DELETE CASCADE,
-    FOREIGN KEY (GenreId) REFERENCES BookGenres(GenreId) ON DELETE CASCADE,
+    FOREIGN KEY (BooksBookId) REFERENCES Books(BookId) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (GenreId) REFERENCES BookGenres(GenreId) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (BooksBookId, GenreId)
 );
 
@@ -149,8 +149,8 @@ CREATE TABLE BookBookGenre (
 CREATE TABLE MusicMusicGenre (
     MusicId INT NOT NULL,
     GenreId INT NOT NULL,
-    FOREIGN KEY (MusicId) REFERENCES Music(MusicId) ON DELETE CASCADE,
-    FOREIGN KEY (GenreId) REFERENCES MusicGenres(GenreId) ON DELETE CASCADE,
+    FOREIGN KEY (MusicId) REFERENCES Music(MusicId) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (GenreId) REFERENCES MusicGenres(GenreId) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (MusicId, GenreId)
 );
 
@@ -158,8 +158,8 @@ CREATE TABLE MusicMusicGenre (
 CREATE TABLE MovieMovieGenre (
     MoviesMovieId INT NOT NULL,
     GenreId INT NOT NULL,
-    FOREIGN KEY (MoviesMovieId) REFERENCES Movies(MovieId) ON DELETE CASCADE,
-    FOREIGN KEY (GenreId) REFERENCES MovieGenres(GenreId) ON DELETE CASCADE,
+    FOREIGN KEY (MoviesMovieId) REFERENCES Movies(MovieId) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (GenreId) REFERENCES MovieGenres(GenreId) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (MoviesMovieId, GenreId)
 );
 
@@ -167,7 +167,7 @@ CREATE TABLE MovieMovieGenre (
 CREATE TABLE GameGameGenre (
     GamesGameId INT NOT NULL,
     GenreId INT NOT NULL,
-    FOREIGN KEY (GamesGameId) REFERENCES Games(GameId) ON DELETE CASCADE,
-    FOREIGN KEY (GenreId) REFERENCES GameGenres(GenreId) ON DELETE CASCADE,
+    FOREIGN KEY (GamesGameId) REFERENCES Games(GameId) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (GenreId) REFERENCES GameGenres(GenreId) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (GamesGameId, GenreId)
 );

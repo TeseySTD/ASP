@@ -1,0 +1,182 @@
+/* Outline кнопки */
+.btn-outline-dark {
+  color: #eeeded;
+  border-color: #4a148c;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-dark:hover {
+  color: #ffffff;
+  background: linear-gradient(45deg, #4a148c, #6a1b9a);
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(74, 20, 140, 0.3);
+}
+
+.btn-outline-dark:active {
+  background: linear-gradient(45deg, #3a1070, #581888) !important;
+  border-color: transparent !important;
+  color: #ffffff !important;
+}
+
+.btn-outline-dark:focus {
+  box-shadow: 0 0 0 0.2rem rgba(74, 20, 140, 0.25);
+}
+
+/* Додаємо інші outline варіанти для повноти стилів */
+.btn-outline-primary {
+  color: #6a1b9a;
+  border-color: #6a1b9a;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  color: #ffffff;
+  background: linear-gradient(45deg, #6a1b9a, #9c27b0);
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(106, 27, 154, 0.3);
+}
+
+.btn-outline-primary:active {
+  background: linear-gradient(45deg, #581888, #7b1fa2) !important;
+  border-color: transparent !important;
+  color: #ffffff !important;
+}
+
+.btn-outline-primary:focus {
+  box-shadow: 0 0 0 0.2rem rgba(106, 27, 154, 0.25);
+}
+
+.btn-outline-danger {
+  color: #e91e63;
+  border-color: #e91e63;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+  color: #ffffff;
+  background: linear-gradient(45deg, #e91e63, #9c27b0);
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+}
+
+.btn-outline-danger:active {
+  background: linear-gradient(45deg, #c2185b, #7b1fa2) !important;
+  border-color: transparent !important;
+  color: #ffffff !important;
+}
+
+.btn-outline-danger:focus {
+  box-shadow: 0 0 0 0.2rem rgba(233, 30, 99, 0.25);
+}
+
+.btn-outline-primary:disabled,
+.btn-outline-dark:disabled,
+.btn-outline-danger:disabled {
+  color: #6c757d;
+  border-color: #6c757d;
+  background: transparent;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(106, 27, 154, 0.3);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:focus {
+    border-color: #BA68C8;
+    box-shadow: 0 0 0 0.2rem rgba(186, 104, 200, 0.25);
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, #6a1b9a, #9c27b0);
+  border: none;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(45deg, #7c2aac, #ab47bc);
+}
+
+.btn-primary:active {
+  background: linear-gradient(45deg, #581888, #8e24aa) !important;
+}
+
+.btn-danger {
+  background: linear-gradient(45deg, #e91e63, #9c27b0);
+  border: none;
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(45deg, #f06292, #ab47bc);
+  box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+}
+
+.btn-danger:active {
+  background: linear-gradient(45deg, #d81b60, #8e24aa) !important;
+}
+
+/* Контейнер для чекбоксу */
+.form-check {
+  padding-left: 2em;
+  margin-bottom: 1rem;
+}
+
+/* Базовий стиль чекбоксу */
+.form-check-input {
+  width: 1.2em;
+  height: 1.2em;
+  background-color: #fff;
+  border: 2px solid #9C27B0;
+  border-radius: 0.25em;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+/* Ховер стан */
+.form-check-input:hover {
+  border-color: #6A1B9A;
+  box-shadow: 0 0 0 0.2rem rgba(106, 27, 154, 0.15);
+}
+
+/* Активний стан */
+.form-check-input:checked {
+  background-color: #6A1B9A;
+  border-color: #6A1B9A;
+}
+
+/* Фокус стан */
+.form-check-input:focus {
+  border-color: #9C27B0;
+  box-shadow: 0 0 0 0.25rem rgba(156, 39, 176, 0.25);
+}
+
+/* Відключений стан */
+.form-check-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-check-input:disabled ~ .form-check-label {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Лейбл чекбоксу */
+.form-check-label {
+  color: #4A148C;
+  cursor: pointer;
+  padding-left: 0.5em;
+}
